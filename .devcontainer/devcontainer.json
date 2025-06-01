@@ -6,8 +6,8 @@
 
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-  "postCreateCommand": "npm install",
-  "postAttachCommand": "aio app run",
+  // "postCreateCommand": "npm install",
+  // "postAttachCommand": "aio app run",
 
   "forwardPorts": [],
   "customizations": {

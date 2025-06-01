@@ -26,4 +26,7 @@ RUN export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh" && \
     aio plugins:install @adobe/aio-cli-plugin-api-mesh && \
     aio plugins:install https://github.com/adobe-commerce/aio-cli-plugin-commerce
 
-RUN sudo apt-get update && sudo apt-get install -y gh xdg-utils
+RUN sudo apt-get update && sudo apt-get install -y gh xdg-utils && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
+
