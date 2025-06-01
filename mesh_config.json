@@ -1,0 +1,44 @@
+
+    {
+        "meshConfig": {
+            "responseConfig": {
+                "CORS": {
+                    "credentials": true,
+                    "exposedHeaders": ["Content-Range", "X-Content-Range"],
+                    "maxAge": 60480,
+                    "methods": ["GET", "POST"],
+                    "origin": "*"
+                },
+                "headers": {
+                    "mode": "no-cors",
+                    "x-include-metadata": "true"
+                },
+                "includeHTTPDetails": false
+            },
+            "sources": [
+                {
+                    "name": "CommerceSaaSGraphQl",
+                    "handler": {
+                        "graphql": {
+                            "endpoint": "https://na1-sandbox.api.commerce.adobe.com/C6wSs2HrNy7D79CYD5AFZP/graphql",
+                            "useGETForQueries": true,
+                            "operationHeaders": {
+                                "Content-Type": "application/json",
+                                "Magento-Environment-Id": "{context.headers['magento-environment-id']}",
+                                "Magento-Website-Code": "{context.headers['magento-website-code']}",
+                                "Magento-Store-View-Code": "{context.headers['magento-store-view-code']}",
+                                "Magento-Store-Code": "{context.headers['magento-store-code']}",
+                                "Magento-Customer-Group": "{context.headers['magento-customer-group']}",
+                                "x-api-key": "{context.headers['x-api-key']}",
+                                "Authorization": "{context.headers['Authorization']}"
+                            }
+                        }
+                    },
+                    "responseConfig": {
+                        "headers": ["X-Magento-Cache-Id"]
+                    }
+                }
+            ]
+        }
+    }
+    
