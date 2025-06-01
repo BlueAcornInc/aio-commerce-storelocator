@@ -1,8 +1,0 @@
-{
-  "name": "store-locator",
-  "displayName": "Store Locator",
-  "description": "A Store Locator application built with Adobe Commerce.",
-  "platform": "web",
-  "id": "store-locator-app",
-  "version": "1.0.0"
-}
