@@ -1,0 +1,21 @@
+{
+  "name": "ShipsStation Commerce App",
+
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "postCreateCommand": "npm install",
+  "postAttachCommand": "aio app run",
+
+  "forwardPorts": [],
+  "customizations": {
+    "vscode": {
+      "extensions": ["ryanluker.vscode-coverage-gutters"]
+    }
+  },
+  "features": {
+    "ghcr.io/christophermacgown/devcontainer-features/direnv:1": {}
+  }
+}
