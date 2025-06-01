@@ -1,76 +1,81 @@
-# Store Locator App for Adobe Commerce
+# evergreendoug
 
-The **Store Locator App** is a customizable, cloud-native application built using Adobe Commerce App Builder. It integrates seamlessly with Adobe Commerce Core SaaS and Edge Delivery Services.
+Welcome to my Adobe I/O Application!
 
-Originally developed and showcased at Adobe Summit, the app serves as a production-ready starter kit for brands looking to add location-based services to their Adobe Commerce storefronts with minimal setup and full configurability.
+## Setup
 
----
+- Populate the `.env` file in the project root and fill it as shown [below](#env)
 
-## Environment Info
+## Local Dev
+
+- `aio app run` to start your local Dev server
+- App will run on `localhost:9080` by default
+
+By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
+local serverless stack and also run your actions locally use the `aio app run --local` option.
+
+## Test & Coverage
+
+- Run `aio app test` to run unit tests for ui and actions
+- Run `aio app test --e2e` to run e2e tests
+
+## Deploy & Cleanup
+
+- `aio app deploy` to build and deploy all actions on Runtime and static files to CDN
+- `aio app undeploy` to undeploy the app
+
+## Config
+
+### `.env`
+
+You can generate this file using the command `aio app use`. 
 
 ```bash
-Customize your code: https://github.com/blueacorninc/shop-storelocator
-Manage your Commerce config: https://github.com/blueacorninc/shop-storelocator/blob/main/config.json
-Edit your content: https://da.live/#/blueacorninc/shop-storelocator
-Preview your storefront: https://main--shop-storelocator--blueacorninc.aem.page/
-Access your Commerce Admin: https://na1-sandbox.admin.commerce.adobe.com/C6wSs2HrNy7D79CYD5AFZP
-Try out your API: https://edge-graph.adobe.io/api/d5814934-4c87-49e1-9c70-1bdac684f1b2/graphql
-To check the status of your Mesh, run aio api-mesh status
-To update your Mesh, run aio api-mesh update mesh_config.json
-View your Mesh details: https://developer.adobe.com/console/projects/1244026/4566206088345438655/workspaces/4566206088345462424/details
-For next steps, including how to customize your storefront and make it your own, check out our docs:
-https://experienceleague.adobe.com/developer/commerce/storefront/
+# This file must **not** be committed to source control
+
+## please provide your Adobe I/O Runtime credentials
+# AIO_RUNTIME_AUTH=
+# AIO_RUNTIME_NAMESPACE=
 ```
 
-## Features
+### `app.config.yaml`
 
-### Location Management
-- Admin interface for managing physical store locations
-- Supports address, contact info, operating hours, and more
-- Integrated with Adobe Commerce's Multi-Source Inventory (MSI) to fetch store/warehouse locations dynamically
+- Main configuration file that defines an application's implementation. 
+- More information on this file, application configuration, and extension configuration 
+  can be found [here](https://developer.adobe.com/app-builder/docs/guides/appbuilder-configuration/#appconfigyaml)
 
-### Frontend Store Finder
-- Customer-facing UI to search for stores near a specific location
-- Integrated map component with location pins
-- Filtering based on distance or available products
-- Built using Edge Delivery Services for fast, native rendering
+#### Action Dependencies
 
-### Configurable Theme
-- Fully themeable: update logos, colors, and layout with no code
-- Based on document-based authoring model compatible with Adobe Edge Delivery
-- Built as a reusable starter kit with design tokens ready for customization
+- You have two options to resolve your actions' dependencies:
 
-### Commerce-Aware
-- Optionally display product availability by location
-- Useful for Buy Online, Pickup In Store (BOPIS) use cases
-- Deep integration with Adobe Commerce product catalog and inventory APIs
+  1. **Packaged action file**: Add your action's dependencies to the root
+   `package.json` and install them using `npm install`. Then set the `function`
+   field in `app.config.yaml` to point to the **entry file** of your action
+   folder. We will use `webpack` to package your code and dependencies into a
+   single minified js file. The action will then be deployed as a single file.
+   Use this method if you want to reduce the size of your actions.
 
-### Admin Config UI
-- Embedded directly into Adobe Commerce Admin Panel
-- Native look and feel using Adobe Spectrum Web Components
-- Configure map provider API keys, UI settings, and behavior rules
+  2. **Zipped action folder**: In the folder containing the action code add a
+     `package.json` with the action's dependencies. Then set the `function`
+     field in `app.config.yaml` to point to the **folder** of that action. We will
+     install the required dependencies within that directory and zip the folder
+     before deploying it as a zipped action. Use this method if you want to keep
+     your action's dependencies separated.
 
-### Fast Deployment
-- Deployable as an Adobe Commerce App Builder extension
-- Powered by Adobe Runtime and Edge Delivery
-- Typically goes live in under 1 week with full functionality
+## Debugging in VS Code
 
----
+While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
+and select the debugging configuration called `WebAndActions`.
+Alternatively, there are also debug configs for only UI and each separate action.
 
-## Use Cases
+## Typescript support for UI
 
-- Retail brands with multiple physical store locations
-- Omnichannel strategies needing local pickup options
-- B2B companies with warehouse ordering systems
-- Franchises or partners requiring localized storefronts
-
----
-
-## Tech Stack
-
-- Adobe Commerce App Builder (Node.js Runtime)
-- Adobe Edge Delivery Services
-- Adobe Commerce Core SaaS APIs
-- Multi-Source Inventory (MSI)
-- Spectrum Web Components
-- Mapbox or Google Maps (Configurable)
+To use typescript use `.tsx` extension for react components and add a `tsconfig.json` 
+and make sure you have the below config added
+```
+ {
+  "compilerOptions": {
+      "jsx": "react"
+    }
+  } 
+```
