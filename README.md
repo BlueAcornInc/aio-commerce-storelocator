@@ -6,6 +6,22 @@ Originally developed and showcased at Adobe Summit, the app serves as a producti
 
 ---
 
+## Environment Info
+
+```bash
+Customize your code: https://github.com/blueacorninc/shop-storelocator
+Manage your Commerce config: https://github.com/blueacorninc/shop-storelocator/blob/main/config.json
+Edit your content: https://da.live/#/blueacorninc/shop-storelocator
+Preview your storefront: https://main--shop-storelocator--blueacorninc.aem.page/
+Access your Commerce Admin: https://na1-sandbox.admin.commerce.adobe.com/C6wSs2HrNy7D79CYD5AFZP
+Try out your API: https://edge-graph.adobe.io/api/d5814934-4c87-49e1-9c70-1bdac684f1b2/graphql
+To check the status of your Mesh, run aio api-mesh status
+To update your Mesh, run aio api-mesh update mesh_config.json
+View your Mesh details: https://developer.adobe.com/console/projects/1244026/4566206088345438655/workspaces/4566206088345462424/details
+For next steps, including how to customize your storefront and make it your own, check out our docs:
+https://experienceleague.adobe.com/developer/commerce/storefront/
+```
+
 ## Features
 
 ### Location Management

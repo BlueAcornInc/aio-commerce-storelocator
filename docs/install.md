@@ -19,6 +19,9 @@ This guide will walk a merchant or a developer through how to set up this projec
 
 If you haven't already, we need to prepare the project and workspaces within our Adobe App Builder organization, as well as the code repos that represent Adobe Commerce Storefront and any additional public apps you may need to use.
 
+`aio commerce init` will create a few repos for you in github, so you must be authenticated with github. the `gh` tool can help with this.
+
 ```bash
+$ gh auth login 
 $ aio commerce init
 ```
