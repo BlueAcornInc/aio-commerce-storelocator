@@ -1,10 +1,10 @@
 ---
-title: Installation
+title: PaaS Setup
 layout: page
 parent: Store Locator
 ---
 
-# Installation
+# PaaS Setup
 
 This guide will walk a merchant or a developer through how to set up this project with an Adobe Commerce SaaS Workspace. It assumes you have nothing but the following entitlements from Adobe:
 
@@ -26,7 +26,7 @@ $ gh auth login
 $ aio commerce init
 ```
 
-## **Create an Integration in Adobe Commerce Admin**
+## Create an Integration in Adobe Commerce Admin
 
 - This step allows your App Builder application to authenticate and communicate with your Adobe Commerce backend.
 
@@ -60,31 +60,25 @@ $ aio commerce init
   COMMERCE_ACCESS_TOKEN_SECRET=your-access-token-secret
 ```
 
-## **Enable Adobe I/O Events in Adobe Commerce Admin**
+This will allow the app to fetch commerce data in future updates.
 
+## Register App to Commerce Instance
 
-Take a look at https://developer.adobe.com/events/docs/guides/appbuilder/ !!
+This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured. 
 
-- First, we need to make sure we have events enabled in our app. In the App Builder Developer Panel, pull up the project we want to use (i.e. created in the previous step) and select the workspace, Add an Event, and Add the Adobe Commerce Eventing.
+### Setting up IMS
 
-![Commerce Events in App Builder](img/commerce-events.png)
+Behind the scenes, there is an app repository this gets registered with. It is exposed through IMS, so be sure to have your instances configured with IMS and in the same organization as your users and apps.
 
+* [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
 
-- In your Adobe Commerce Admin panel:
+### Setting up Admin UI SDK
 
-  - Navigate to:  
-    `Stores > Configuration > Adobe Services > Adobe I/O Events > Commerce Events`
+Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs.
 
-  - Set **"Enable Adobe I/O Events"** to `Yes`
+### Running Locally
 
-  - Fill in the following required fields:
-     - **Merchant ID**
-     - **Environment ID**
+![Running Admin UI SDK Locally](img/admin-ui-sdk-setup.png)
 
-- These values link your Commerce instance to your Adobe I/O Events provider.
-
-- Once saved, copy the values and add them to your `.env` file:
-- ```env
-  COMMERCE_ADOBE_IO_EVENTS_MERCHANT_ID=your-merchant-id-here
-  COMMERCE_ADOBE_IO_EVENTS_ENVIRONMENT_ID=your-environment-id-here
+Once setup, click __Refresh Registrations__ to bring in the app. This will expose the App in the _Apps_ section of the Main Admin Menu.
 
