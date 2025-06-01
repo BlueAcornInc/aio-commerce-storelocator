@@ -1,5 +1,12 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
+RUN sudo apt-get update && sudo apt-get install -y gh xdg-utils php-cli && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+RUN curl -sS https://accounts.magento.cloud/cli/installer | php
+ENV PATH    $PATH:$HOME/.magento-cloud/bin
+
 USER vscode
 
 ARG NODE_VERSION
@@ -25,8 +32,4 @@ RUN export NVM_DIR="$HOME/.nvm" && \. "$NVM_DIR/nvm.sh" && \
     aio telemetry yes && \
     aio plugins:install @adobe/aio-cli-plugin-api-mesh && \
     aio plugins:install https://github.com/adobe-commerce/aio-cli-plugin-commerce
-
-RUN sudo apt-get update && sudo apt-get install -y gh xdg-utils && \
-    sudo apt-get clean && \
-    sudo rm -rf /var/lib/apt/lists/*
 
