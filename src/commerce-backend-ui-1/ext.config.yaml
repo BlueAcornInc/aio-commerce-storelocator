@@ -16,8 +16,8 @@ runtimeManifest:
           inputs:
             LOG_LEVEL: debug
           annotations:
-            require-adobe-auth: true
-            final: true
+            require-adobe-auth: false
+            final: false
     admin-menu:
       license: Apache-2.0
       actions:
@@ -33,5 +33,5 @@ runtimeManifest:
             COMMERCE_ACCESS_TOKEN: $COMMERCE_ACCESS_TOKEN
             COMMERCE_ACCESS_TOKEN_SECRET: $COMMERCE_ACCESS_TOKEN_SECRET
           annotations:
-            require-adobe-auth: true
-            final: true
+            require-adobe-auth: false
+            final: false
