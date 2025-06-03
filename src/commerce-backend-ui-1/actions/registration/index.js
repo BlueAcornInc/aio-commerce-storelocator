@@ -27,7 +27,7 @@ async function main() {
                     {
                         id: `${extensionId}::apps`,
                         title: 'Store Locator',
-                        isSection: true,
+                        isSection: false,
                         sortOrder: 100
                     }
                 ],
