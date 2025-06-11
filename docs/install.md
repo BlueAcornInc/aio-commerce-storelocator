@@ -38,7 +38,7 @@ $ aio commerce init
      - Click **Add New Integration**
 
      - Fill in the following values:
-        - **Name**: e.g. `Stripe App Builder Integration`
+        - **Name**: e.g. `Store Locator App Builder Integration`
         - Leave other fields blank unless required by your organization
 
      - Under the **API** tab, click **Select All** to grant all permissions, or configure scopes as needed
