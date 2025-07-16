@@ -128,7 +128,7 @@ Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit 
 
 ### Running Locally
 
-![Running Admin UI SDK Locally](img/admin-ui-sdk-setup.png)
+![Running Admin UI SDK Locally](docs/img/admin-ui-sdk-setup.png)
 
 Once setup, click __Refresh Registrations__ to bring in the app. This will expose the App in the _Apps_ section of the Main Admin Menu.
 
@@ -140,11 +140,11 @@ Store Locator leverages native Adobe Commerce SaaS Sources and Inventory to prov
 
 You can find Sources in the Stores menu under Inventory.
 
-![Find Sources](img/find-sources.png)
+![Find Sources](docs/img/find-sources.png)
 
 ### Add New Sources
 
-![Add New Sources](img/add-new-source.png)
+![Add New Sources](docs/img/add-new-source.png)
 
 ### Configure Invnetory
 
