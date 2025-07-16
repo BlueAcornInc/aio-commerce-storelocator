@@ -31,7 +31,7 @@ jobs:
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
-          command: oauth_sts
+          command: auth
           CLIENTID: ${{ vars.CLIENTID_STAGE }}
           CLIENTSECRET: ${{ secrets.CLIENTSECRET_STAGE }}
           TECHNICALACCOUNTID: ${{ vars.TECHNICALACCID_STAGE }}
