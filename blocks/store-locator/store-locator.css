@@ -1,0 +1,330 @@
+/* START LEAFLET MAP */
+.leaflet-container {
+
+  .leaflet-popup-close-button {
+    display: none;
+  }
+
+  .leaflet-pane {
+    z-index: 0;
+  }
+
+  .leaflet-control {
+    z-index: 2;
+  }
+
+  .leaflet-popup-content {
+    letter-spacing: var(--type-body-1-default-letter-spacing);
+    padding: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 50% !important;
+    height: 4rem;
+    width: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 1.3rem;
+    left: 0;
+    /* background: var(--color-informational-800) !important; */
+    background: var(--theme-color-1) !important;
+    color: var(--color-neutral-50) !important;
+  }
+
+  .leaflet-marker-pane.leaflet-pane {
+    counter-reset: item;
+  }
+
+  .leaflet-marker-pane.leaflet-pane>*::before {
+    counter-increment: item;
+    content: counter(item);
+    margin-right: 0.5em;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    color: var(--color-neutral-50);
+    text-align: center;
+    left: 1rem;
+    top: 1rem;
+  }
+
+  .leaflet-popup-tip {
+    display: none;
+  }
+
+  .leaflet-left {
+    display: none;
+  }
+
+  .leaflet-popup-content__container p {
+    font-weight: 800;
+  }
+
+  .leaflet-top.leaflet-right {
+    top: 7.5rem;
+    right: 1rem;
+  }
+}
+
+/* END LEAFLET MAP */
+
+.store-locator-wrapper {
+  padding: 0 !important;
+}
+
+.block.store-locator {
+
+  position: relative;
+  box-sizing: border-box;
+
+  .my-store {
+    display: flex;
+    padding: 0 var(--spacing-small);
+  }
+
+  .my-store__selected-store {
+    margin-left: .5rem;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  div,
+  p,
+  a {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  h4,
+  div,
+  p,
+  a {
+    margin: 0;
+    padding: 0;
+  }
+
+  .leaflet-container {
+    height: 80vh !important;
+  }
+
+  .store-cards-container {
+    box-sizing: border-box;
+    width: 100%;
+    left: 0;
+    bottom: 2.2rem;
+    position: absolute;
+    border-radius: 0;
+    display: flex;
+    gap: .8rem;
+    overflow-x: scroll;
+    padding: 0;
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .store-cards-container .store-card [class*="row-"] {
+    display: flex;
+    align-items: center;
+    gap: .5rem
+  }
+
+  .store-card {
+    background: var(--color-neutral-50);
+    min-width: 28rem;
+    border-radius: .5rem;
+    margin: .8rem 0;
+    padding: 1.6rem;
+    box-shadow: 0 0px 0 1px var(--color-neutral-400);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .store-card.selected {
+    box-shadow: 0px 0px 4px 0px var(--theme-color-3);
+  }
+
+  .store-card__header,
+  .store-card__body {
+    margin-left: 3.6rem;
+  }
+
+  .store-card__header {
+    display: flex;
+    position: relative;
+  }
+
+  .store-card__number,
+  .store-card__name,
+  .store-card__title {
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+
+  .store-card__number {
+    position: absolute;
+    height: 2.4rem;
+    width: 2.4rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 0 .1rem var(--color-neutral-900);
+    left: -3.6rem;
+  }
+
+  .store-card__star-rating {
+    width: 10rem;
+    height: 2rem;
+    position: relative;
+  }
+
+  .store-card__stars {
+    z-index: 1;
+    position: relative;
+  }
+
+  .store-card__slider {
+    height: 2rem;
+    background: linear-gradient(90deg, var(--theme-color-2), var(--theme-color-1));
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+  }
+
+  .store-card__phone {
+    color: var(--color-neutral-800);
+    font-size: 1.2rem !important;
+    line-height: 1.6rem !important;
+  }
+
+  .store-card:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 4px 0px var(--theme-color-3);
+  }
+
+  .zip-form {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-neutral-50);
+    width: calc(100% - 2.4rem);
+    padding: .4rem;
+    border-radius: 2.4rem;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
+    position: absolute;
+    top: 3.5rem;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+
+  .zip-form__label {
+    display: none;
+  }
+
+  .zip-form__label,
+  .zip-form__input,
+  .zip-form__button {
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+  }
+
+  .zip-form__input {
+    border-radius: 2rem;
+    padding: 0px 1.6rem;
+    height: 4rem;
+    border: 1px solid var(--Form-Field-Stroke-Default, var(--color-neutral-400));
+    width: 100%;
+  }
+
+  .zip-form__button {
+    display: flex;
+    border-radius: 40px;
+    background: var(--theme-color-1);
+    color: var(--color-neutral-50);
+    border: none;
+    height: 4rem;
+    padding: var(--Spacing-Spacing-008, 8px) var(--Spacing-Spacing-016, 16px);
+    align-items: center;
+    min-width: 9.4rem;
+    margin-left: auto;
+    justify-content: center;
+  }
+
+  .zip-form__button:hover {
+    cursor: pointer;
+  }
+
+  .blue-acorn__icon {
+    font-weight: 600;
+    background: var(--color-neutral-900);
+    border-radius: 50%;
+  }
+}
+
+@media screen and (width >=900px) {
+
+  .store-locator-wrapper {
+    padding: 0 2.4rem !important;
+  }
+
+  .block.store-locator {
+
+    .leaflet-container {
+      height: 50rem !important;
+
+      .leaflet-top.leaflet-right {
+        top: 1rem;
+      }
+    }
+
+    .store-cards-container {
+      flex-direction: column;
+      width: 36rem;
+      height: 48rem;
+      overflow-x: unset;
+      overflow-y: scroll;
+      top: calc(50% + 1rem);
+      left: .6rem;
+      background: #fff;
+      border-radius: 1rem;
+      transform: translateY(-50%);
+      padding: 5.8rem 1.2rem 1.2rem 1.2rem;
+      box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
+      gap: unset;
+    }
+
+    .zip-form {
+      transform: unset;
+      box-shadow: unset;
+      background: #fff;
+      z-index: 1;
+      width: 36rem;
+      left: .6rem;
+      top: 3rem;
+      padding: 1rem 1rem;
+      border-radius: 1rem;
+      border-bottom-left-radius: unset;
+      border-bottom-right-radius: unset;
+    }
+
+    .my-store {
+      padding: unset;
+    }
+  }
+}

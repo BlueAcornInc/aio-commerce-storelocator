@@ -1,0 +1,20 @@
+{
+    "name": "@blueacorninc/aio-commerce-storelocator-blocks",
+    "version": "0.1.5",
+    "description": "Store Locator Block Collection for Adobe Commerce Storefront and AEM Edge Delivery Services",
+    "author": {
+        "name": "Sam Davis-Castro",
+        "email": "sam.davis-castro@blueacornici.com"
+    },
+    "contributors": [
+        {
+          "name": "Ryan Barrineau",
+          "email": "ryan.barrineau@blueacornici.com"
+        },
+        {
+          "name": "Doug Hatcher",
+          "email": "doug.hatcher@blueacornici.com"
+        }
+      ],
+    "dependencies": {}
+}

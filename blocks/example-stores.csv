@@ -1,0 +1,6 @@
+name,rating,numOfReviews,type,address,description,phone,lat,lng,commerce_warehouse_id,zip,state,city,hours
+Big Box Store Summerville,4,26 reviews,Big Box Store,450 Azelea Square Blvd,,8435551212,33.0385,-80.153,bbs1,29483,South Carolina,Summerville,
+Big Box Store North Charleston,4.8,14 reviews,Big Box Store,7250 Rivers Ave,,843551212,32.93184,-80.03726,bbs2,29406,South Carolina,North Charleston,
+Big Box Store Mount Pleasant,4.5,9 reviews,Big Box Store,1300 Long Grove Dr,,843551212,32.8325,-79.8136,bbs3,29464,South Carolina,Mount Pleasant,
+Big Box Store West Ashley,5,31 reviews,Big Box Store,2070 Sam Rittenburg Blvd,,8435551212,32.8064,-80.0201,bbs4,29407,South Carolina,Charleston,
+Big Box Store Downtown Charleston,4.2,32 reviews,Big Box Store,211 King St,,8435551212,32.7812,-79.9316,bbs5,29401,South Carolina,Charleston,
