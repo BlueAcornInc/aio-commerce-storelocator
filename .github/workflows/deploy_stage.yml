@@ -38,6 +38,11 @@ jobs:
           TECHNICALACCOUNTEMAIL: ${{ vars.TECHNICALACCEMAIL_STAGE }}
           IMSORGID: ${{ vars.IMSORGID_STAGE }}
           SCOPES: ${{ vars.SCOPES_STAGE }}
+          client_secrets: ${{ vars.CLIENT_SECRETS_STAGE }}
+          technical_account_email: ${{ vars.TECHNICALACCEMAIL_STAGE }}
+          technical_account_id: ${{ vars.TECHNICALACCID_STAGE }}
+          scopes: ${{ vars.SCOPES_STAGE }}
+          scope: ${{ vars.SCOPES_STAGE }}
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_STAGE }}
