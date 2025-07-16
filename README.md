@@ -1,4 +1,4 @@
-# Store Locator for Adobe Commerce Storefront
+# Store Locator by Blue Acorn
 
 This app introduces store locator functionality, allowing users to select a store and view details on a map using Adobe Commerce Storefront. 
 
