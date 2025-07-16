@@ -37,7 +37,7 @@ jobs:
           TECHNICALACCOUNTID: ${{ vars.TECHNICALACCID_STAGE }}
           TECHNICALACCOUNTEMAIL: ${{ vars.TECHNICALACCEMAIL_STAGE }}
           IMSORGID: ${{ vars.IMSORGID_STAGE }}
-          SCOPES: ${{ vars.SCOPES_STAGE }}
+          # SCOPES: ${{ vars.SCOPES_STAGE }}
           client_secrets: ${{ vars.CLIENT_SECRETS_STAGE }}
           technical_account_email: ${{ vars.TECHNICALACCEMAIL_STAGE }}
           technical_account_id: ${{ vars.TECHNICALACCID_STAGE }}
