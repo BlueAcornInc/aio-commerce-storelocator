@@ -10,7 +10,7 @@
     "@adobe/uix-guest": "^0.8.3",
     "@spectrum-icons/workflow": "^4.2.4",
     "cloudevents": "^6.0.3",
-    "core-js": "^3.27.2",
+    "core-js": "^3.44.0",
     "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.0",
     "got": "^11.8.5",
