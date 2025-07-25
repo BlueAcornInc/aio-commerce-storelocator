@@ -128,9 +128,16 @@ jobs:
         if: env.SKIP_GITHUB_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
+          # Clean any existing npmrc
+          rm -f .npmrc
+          
           # Configure npm for GitHub Packages authentication
           echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
+          # Debug: show npm config
+          echo "Current npm config:"
+          cat .npmrc
           
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to GitHub Packages with beta tag..."
@@ -146,16 +153,23 @@ jobs:
         if: env.SKIP_NPMJS_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
-          # Configure npm for npmjs.com
+          # Clean any existing npmrc completely
+          rm -f .npmrc
+          
+          # Configure npm ONLY for npmjs.com
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
           
+          # Debug: show npm config
+          echo "Current npm config for npmjs.com:"
+          cat .npmrc
+          
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to npmjs.com with beta tag..."
-            npm publish --access public --tag beta
+            npm publish --access public --tag beta --registry https://registry.npmjs.org
           else
             echo "Publishing stable version to npmjs.com with latest tag..."
-            npm publish --access public
+            npm publish --access public --registry https://registry.npmjs.org
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
