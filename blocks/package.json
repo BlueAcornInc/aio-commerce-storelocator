@@ -1,12 +1,18 @@
 {
   "name": "@blueacorninc/storefront-storelocator",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Store Locator block for Adobe Commerce Storefront",
   "main": "index.js",
   "scripts": {
     "postinstall": "node postinstall.js"
   },
-  "keywords": ["adobe-commerce", "eds", "storefront", "store-locator", "blocks"],
+  "keywords": [
+    "adobe-commerce",
+    "eds",
+    "storefront",
+    "store-locator",
+    "blocks"
+  ],
   "author": "Blue Acorn",
   "license": "MIT",
   "repository": {
