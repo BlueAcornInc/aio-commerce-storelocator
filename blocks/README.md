@@ -17,9 +17,27 @@ This npm package provides a Store Locator block that can be easily installed int
 
 To install the Store Locator blocks in your Adobe Commerce Storefront project:
 
+**For stable releases:**
 ```bash
 npm install @blueacorninc/storefront-storelocator
 ```
+
+**For beta/testing versions:**
+```bash
+# Configure npm to use GitHub Packages for this scope
+npm config set @blueacorninc:registry https://npm.pkg.github.com
+
+# Authenticate with GitHub Packages (if you have gh CLI)
+echo "//npm.pkg.github.com/:_authToken=$(gh auth token)" >> ~/.npmrc
+
+# Install latest beta
+npm install @blueacorninc/storefront-storelocator@beta
+
+# Or install specific prerelease version
+npm install @blueacorninc/storefront-storelocator@1.0.0-block-package.abc1234
+```
+
+> **Authentication Note:** GitHub Packages requires authentication. If you don't have `gh` CLI, you can create a personal access token at https://github.com/settings/tokens with `read:packages` permission and use it instead.
 
 The postinstall script will automatically copy the store locator blocks to your project's `blocks/` directory.
 
