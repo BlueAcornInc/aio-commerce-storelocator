@@ -3,7 +3,6 @@ name: Publish Store Locator Blocks to GitHub Packages
 on:
   push:
     branches:
-      - main
       - block-package
     paths:
       - 'blocks/**'
