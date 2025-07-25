@@ -36,17 +36,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@blueacorninc'
-
-      - name: Configure npm for GitHub Packages
-        run: |
-          echo "@blueacorninc:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
-
-      - name: Configure npm for npmjs.com
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
       - name: Install dependencies
         working-directory: ./blocks
@@ -92,7 +81,10 @@ jobs:
         working-directory: ./blocks
         run: |
           # Check GitHub Packages
-          if npm view @blueacorninc/storefront-storelocator@$VERSION --registry=https://npm.pkg.github.com > /dev/null 2>&1; then
+          echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
+          if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
             echo "Version $VERSION already exists on GitHub Packages. Skipping GitHub publish."
             echo "SKIP_GITHUB_PUBLISH=true" >> $GITHUB_ENV
           else
@@ -100,14 +92,21 @@ jobs:
             echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
           fi
           
-          # Check npmjs.com
-          if npm view @blueacorninc/storefront-storelocator@$VERSION --registry=https://registry.npmjs.org > /dev/null 2>&1; then
+          # Reset and configure for npmjs.com
+          rm -f .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          
+          # Check npmjs.com (don't need auth for viewing public packages)
+          if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
             echo "Version $VERSION already exists on npmjs.com. Skipping npmjs publish."
             echo "SKIP_NPMJS_PUBLISH=true" >> $GITHUB_ENV
           else
             echo "Version $VERSION does not exist on npmjs.com. Proceeding with npmjs publish."
             echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
           fi
+          
+          # Clean up
+          rm -f .npmrc
           
           # Set overall skip flag if both are already published
           if [ "$SKIP_GITHUB_PUBLISH" == "true" ] && [ "$SKIP_NPMJS_PUBLISH" == "true" ]; then
@@ -129,17 +128,17 @@ jobs:
         if: env.SKIP_GITHUB_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
-          # Temporarily set registry to GitHub Packages for this publish
-          npm config set registry https://npm.pkg.github.com
+          # Configure npm for GitHub Packages authentication
+          echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to GitHub Packages with beta tag..."
-            npm publish --access public --tag beta
+            npm publish --tag beta
           else
             echo "Publishing stable version to GitHub Packages with latest tag..."
-            npm publish --access public
+            npm publish
           fi
-          # Reset registry
-          npm config delete registry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -147,8 +146,10 @@ jobs:
         if: env.SKIP_NPMJS_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
-          # Set registry to npmjs.com for this publish
-          npm config set registry https://registry.npmjs.org
+          # Configure npm for npmjs.com
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+          
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to npmjs.com with beta tag..."
             npm publish --access public --tag beta
@@ -156,8 +157,6 @@ jobs:
             echo "Publishing stable version to npmjs.com with latest tag..."
             npm publish --access public
           fi
-          # Reset registry
-          npm config delete registry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
