@@ -4,5 +4,5 @@
   "description": "Store Locator for Adobe Commerce Storefront",
   "platform": "web",
   "id": "StoreLocator",
-  "version": "1.0.0"
+  "version": "1.0.3"
 }
