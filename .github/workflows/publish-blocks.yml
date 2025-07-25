@@ -180,7 +180,7 @@ jobs:
           body: |
             ## Store Locator Blocks v${{ env.VERSION }}
             
-            ### Installation
+            ### Installation 
             
             **From npmjs.com:**
             ```bash
