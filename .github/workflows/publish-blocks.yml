@@ -1,0 +1,126 @@
+name: Publish Store Locator Blocks to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'blocks/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@blueacorn'
+
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "@blueacorn:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - name: Install dependencies
+        working-directory: ./blocks
+        run: npm install --ignore-scripts
+
+      - name: Bump version (if manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: ./blocks
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Get version from package.json
+        if: github.event_name != 'workflow_dispatch'
+        working-directory: ./blocks
+        run: |
+          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Check if version already exists
+        working-directory: ./blocks
+        run: |
+          if npm view @blueacorn/storefront-storelocator@$VERSION > /dev/null 2>&1; then
+            echo "Version $VERSION already exists. Skipping publish."
+            echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION does not exist. Proceeding with publish."
+            echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+          fi
+        continue-on-error: true
+
+      - name: Publish to GitHub Packages
+        if: env.SKIP_PUBLISH == 'false'
+        working-directory: ./blocks
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Git tag (if manual trigger and published)
+        if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "blocks-v${{ env.VERSION }}"
+          git push origin "blocks-v${{ env.VERSION }}"
+
+      - name: Create GitHub Release (if manual trigger and published)
+        if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: blocks-v${{ env.VERSION }}
+          release_name: Store Locator Blocks v${{ env.VERSION }}
+          body: |
+            ## Store Locator Blocks v${{ env.VERSION }}
+            
+            ### Installation
+            ```bash
+            npm install @blueacorn/storefront-storelocator@${{ env.VERSION }}
+            ```
+            
+            ### What's Included
+            - Store Locator block with interactive maps
+            - Product Availability block
+            - Automatic installation via postinstall script
+            
+            ### Changes
+            Automated release for blocks package.
+          draft: false
+          prerelease: false
+
+      - name: Output results
+        run: |
+          if [ "$SKIP_PUBLISH" == "true" ]; then
+            echo "✅ Version $VERSION already exists - skipped publish"
+          else
+            echo "✅ Successfully published @blueacorn/storefront-storelocator@$VERSION"
+            echo "📦 Package available at: https://github.com/BlueAcornInc/storefront/packages"
+          fi
