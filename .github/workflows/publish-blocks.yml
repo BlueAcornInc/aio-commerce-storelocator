@@ -70,7 +70,7 @@ jobs:
           echo "New prerelease version: $NEW_VERSION"
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-      - name: Get version from package.json
+      - name: Get version from package.json 
         if: github.event_name != 'workflow_dispatch' && github.ref != 'refs/heads/block-package'
         working-directory: ./blocks
         run: |
