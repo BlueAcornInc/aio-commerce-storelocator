@@ -97,7 +97,7 @@ jobs:
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           
           # Check npmjs.com (don't need auth for viewing public packages)
-          if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
+          if npm view @blueacornici/storefront-storelocator@$VERSION > /dev/null 2>&1; then
             echo "Version $VERSION already exists on npmjs.com. Skipping npmjs publish."
             echo "SKIP_NPMJS_PUBLISH=true" >> $GITHUB_ENV
           else
@@ -164,6 +164,12 @@ jobs:
           echo "Current npm config for npmjs.com:"
           cat .npmrc
           
+          # Temporarily change package name for npmjs.com (different scope)
+          ORIGINAL_NAME=$(npm pkg get name | tr -d '"')
+          echo "Original package name: $ORIGINAL_NAME"
+          npm pkg set name="@blueacornici/storefront-storelocator"
+          echo "Changed package name to: $(npm pkg get name | tr -d '"')"
+          
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to npmjs.com with beta tag..."
             npm publish --access public --tag beta --registry https://registry.npmjs.org
@@ -171,6 +177,10 @@ jobs:
             echo "Publishing stable version to npmjs.com with latest tag..."
             npm publish --access public --registry https://registry.npmjs.org
           fi
+          
+          # Restore original package name
+          npm pkg set name="$ORIGINAL_NAME"
+          echo "Restored package name to: $(npm pkg get name | tr -d '"')"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -197,7 +207,7 @@ jobs:
             
             **From npmjs.com:**
             ```bash
-            npm install @blueacorninc/storefront-storelocator@${{ env.VERSION }}
+            npm install @blueacornici/storefront-storelocator@${{ env.VERSION }}
             ```
             
             **From GitHub Packages:**
@@ -214,7 +224,7 @@ jobs:
             Automated release for blocks package.
             
             ### Registries
-            This package is published to both npmjs.com and GitHub Packages.
+            This package is published to both npmjs.com (as @blueacornici/storefront-storelocator) and GitHub Packages (as @blueacorninc/storefront-storelocator).
           draft: false
           prerelease: false
 
@@ -233,8 +243,8 @@ jobs:
             fi
             
             if [ "$SKIP_NPMJS_PUBLISH" == "false" ]; then
-              echo "✅ Successfully published to npmjs.com: @blueacorninc/storefront-storelocator@$VERSION"
-              echo "📦 npmjs.com: https://www.npmjs.com/package/@blueacorninc/storefront-storelocator"
+              echo "✅ Successfully published to npmjs.com: @blueacornici/storefront-storelocator@$VERSION"
+              echo "📦 npmjs.com: https://www.npmjs.com/package/@blueacornici/storefront-storelocator"
             else
               echo "⏭️  Skipped npmjs.com (version already exists)"
             fi
@@ -242,8 +252,8 @@ jobs:
             if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
               echo ""
               echo "🧪 This was a prerelease publish from block-package branch"
-              echo "📝 Install from npmjs.com: npm install @blueacorninc/storefront-storelocator@$VERSION"
+              echo "📝 Install from npmjs.com: npm install @blueacornici/storefront-storelocator@$VERSION"
               echo "📝 Install from GitHub: npm install @blueacorninc/storefront-storelocator@$VERSION --registry=https://npm.pkg.github.com"
-              echo "📝 Or latest beta from npmjs.com: npm install @blueacorninc/storefront-storelocator@beta"
+              echo "📝 Or latest beta from npmjs.com: npm install @blueacornici/storefront-storelocator@beta"
             fi
           fi
