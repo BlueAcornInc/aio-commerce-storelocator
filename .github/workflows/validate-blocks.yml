@@ -6,7 +6,11 @@ on:
       - 'blocks/**'
   push:
     branches:
+      - main
       - block-package
+    paths:
+      - 'blocks/**'
+
 jobs:
   validate:
     runs-on: ubuntu-latest

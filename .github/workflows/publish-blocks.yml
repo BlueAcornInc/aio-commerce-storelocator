@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - block-package
-    paths:
-      - 'blocks/**'
+    # paths:
+    #   - 'blocks/**'
   release:
     types: [published]
   workflow_dispatch:
