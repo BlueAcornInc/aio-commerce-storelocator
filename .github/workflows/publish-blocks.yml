@@ -44,6 +44,10 @@ jobs:
           echo "@blueacorninc:registry=https://npm.pkg.github.com" >> ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
+      - name: Configure npm for npmjs.com
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
       - name: Install dependencies
         working-directory: ./blocks
         run: npm install --ignore-scripts
@@ -87,11 +91,28 @@ jobs:
         if: github.ref != 'refs/heads/block-package'
         working-directory: ./blocks
         run: |
-          if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
-            echo "Version $VERSION already exists. Skipping publish."
+          # Check GitHub Packages
+          if npm view @blueacorninc/storefront-storelocator@$VERSION --registry=https://npm.pkg.github.com > /dev/null 2>&1; then
+            echo "Version $VERSION already exists on GitHub Packages. Skipping GitHub publish."
+            echo "SKIP_GITHUB_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION does not exist on GitHub Packages. Proceeding with GitHub publish."
+            echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
+          fi
+          
+          # Check npmjs.com
+          if npm view @blueacorninc/storefront-storelocator@$VERSION --registry=https://registry.npmjs.org > /dev/null 2>&1; then
+            echo "Version $VERSION already exists on npmjs.com. Skipping npmjs publish."
+            echo "SKIP_NPMJS_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION does not exist on npmjs.com. Proceeding with npmjs publish."
+            echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
+          fi
+          
+          # Set overall skip flag if both are already published
+          if [ "$SKIP_GITHUB_PUBLISH" == "true" ] && [ "$SKIP_NPMJS_PUBLISH" == "true" ]; then
             echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
           else
-            echo "Version $VERSION does not exist. Proceeding with publish."
             echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
           fi
         continue-on-error: true
@@ -101,23 +122,47 @@ jobs:
         run: |
           echo "Testing branch detected - auto-incremented version $VERSION, proceeding with publish."
           echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+          echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
+          echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
 
       - name: Publish to GitHub Packages
-        if: env.SKIP_PUBLISH == 'false'
+        if: env.SKIP_GITHUB_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
+          # Temporarily set registry to GitHub Packages for this publish
+          npm config set registry https://npm.pkg.github.com
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
-            echo "Publishing prerelease version with beta tag..."
+            echo "Publishing prerelease version to GitHub Packages with beta tag..."
             npm publish --access public --tag beta
           else
-            echo "Publishing stable version with latest tag..."
+            echo "Publishing stable version to GitHub Packages with latest tag..."
             npm publish --access public
           fi
+          # Reset registry
+          npm config delete registry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish to npmjs.com
+        if: env.SKIP_NPMJS_PUBLISH == 'false'
+        working-directory: ./blocks
+        run: |
+          # Set registry to npmjs.com for this publish
+          npm config set registry https://registry.npmjs.org
+          if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
+            echo "Publishing prerelease version to npmjs.com with beta tag..."
+            npm publish --access public --tag beta
+          else
+            echo "Publishing stable version to npmjs.com with latest tag..."
+            npm publish --access public
+          fi
+          # Reset registry
+          npm config delete registry
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create Git tag (if manual trigger and published)
-        if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
+        if: github.event_name == 'workflow_dispatch' && (env.SKIP_GITHUB_PUBLISH == 'false' || env.SKIP_NPMJS_PUBLISH == 'false')
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -125,7 +170,7 @@ jobs:
           git push origin "blocks-v${{ env.VERSION }}"
 
       - name: Create GitHub Release (if manual trigger and published)
-        if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
+        if: github.event_name == 'workflow_dispatch' && (env.SKIP_GITHUB_PUBLISH == 'false' || env.SKIP_NPMJS_PUBLISH == 'false')
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -136,8 +181,15 @@ jobs:
             ## Store Locator Blocks v${{ env.VERSION }}
             
             ### Installation
+            
+            **From npmjs.com:**
             ```bash
             npm install @blueacorninc/storefront-storelocator@${{ env.VERSION }}
+            ```
+            
+            **From GitHub Packages:**
+            ```bash
+            npm install @blueacorninc/storefront-storelocator@${{ env.VERSION }} --registry=https://npm.pkg.github.com
             ```
             
             ### What's Included
@@ -147,19 +199,38 @@ jobs:
             
             ### Changes
             Automated release for blocks package.
+            
+            ### Registries
+            This package is published to both npmjs.com and GitHub Packages.
           draft: false
           prerelease: false
 
       - name: Output results
         run: |
           if [ "$SKIP_PUBLISH" == "true" ]; then
-            echo "✅ Version $VERSION already exists - skipped publish"
+            echo "✅ Version $VERSION already exists on both registries - skipped publish"
           else
-            echo "✅ Successfully published @blueacorninc/storefront-storelocator@$VERSION"
-            echo "📦 Package available at: https://github.com/BlueAcornInc/storefront/packages"
+            echo "🎉 Publishing results for version $VERSION:"
+            
+            if [ "$SKIP_GITHUB_PUBLISH" == "false" ]; then
+              echo "✅ Successfully published to GitHub Packages: @blueacorninc/storefront-storelocator@$VERSION"
+              echo "📦 GitHub Packages: https://github.com/BlueAcornInc/storefront/packages"
+            else
+              echo "⏭️  Skipped GitHub Packages (version already exists)"
+            fi
+            
+            if [ "$SKIP_NPMJS_PUBLISH" == "false" ]; then
+              echo "✅ Successfully published to npmjs.com: @blueacorninc/storefront-storelocator@$VERSION"
+              echo "📦 npmjs.com: https://www.npmjs.com/package/@blueacorninc/storefront-storelocator"
+            else
+              echo "⏭️  Skipped npmjs.com (version already exists)"
+            fi
+            
             if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
+              echo ""
               echo "🧪 This was a prerelease publish from block-package branch"
-              echo "📝 Install with: npm install @blueacorninc/storefront-storelocator@$VERSION"
-              echo "📝 Or latest beta: npm install @blueacorninc/storefront-storelocator@beta"
+              echo "📝 Install from npmjs.com: npm install @blueacorninc/storefront-storelocator@$VERSION"
+              echo "📝 Install from GitHub: npm install @blueacorninc/storefront-storelocator@$VERSION --registry=https://npm.pkg.github.com"
+              echo "📝 Or latest beta from npmjs.com: npm install @blueacorninc/storefront-storelocator@beta"
             fi
           fi
