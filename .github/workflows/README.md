@@ -53,20 +53,20 @@ Validates the blocks package structure and functionality.
 
 2. **Package Visibility:**
    - Published packages will be visible in the repository's Packages tab
-   - Package name: `@blueacorn/storefront-storelocator`
+   - Package name: `@blueacorninc/storefront-storelocator`
 
 ### Installation for Merchants
 
 Once published, merchants can install with:
 
 ```bash
-npm install @blueacorn/storefront-storelocator
+npm install @blueacorninc/storefront-storelocator
 ```
 
 Or install from GitHub Packages specifically:
 
 ```bash
-npm install @blueacorn/storefront-storelocator --registry=https://npm.pkg.github.com
+npm install @blueacorninc/storefront-storelocator --registry=https://npm.pkg.github.com
 ```
 
 ## Package Structure

@@ -16,7 +16,7 @@ This npm package provides a Store Locator block that can be easily installed int
 To install the Store Locator blocks in your Adobe Commerce Storefront project:
 
 ```bash
-npm install @blueacorn/storefront-storelocator
+npm install @blueacorninc/storefront-storelocator
 ```
 
 The post-install script will automatically copy the store locator blocks to your project's `blocks/` directory.
