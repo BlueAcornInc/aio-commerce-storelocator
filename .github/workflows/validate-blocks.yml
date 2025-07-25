@@ -92,18 +92,15 @@ jobs:
           echo '{"name": "test-storefront"}' > /tmp/test-storefront/package.json
           
           # Create a temporary package directory (simulating npm install location)
-          mkdir -p /tmp/npm-package
-          cp -r $GITHUB_WORKSPACE/blocks/* /tmp/npm-package/
+          # This simulates where the package would be installed in node_modules
+          mkdir -p /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
+          cp -r $GITHUB_WORKSPACE/blocks/* /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator/
           
-          # Test the postinstall script from the package directory
-          cd /tmp/npm-package
+          # Test the postinstall script from the package directory (simulating npm postinstall)
+          cd /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
           
-          # Mock the installation process - this will find /tmp/test-storefront and install there
+          # Mock the installation process - this should find /tmp/test-storefront and install there
           node -e "
-            // Override process.cwd to simulate npm install context
-            const originalCwd = process.cwd;
-            process.cwd = () => '/tmp/test-storefront';
-            
             const { installBlocks } = require('./postinstall.js');
             try {
               installBlocks();
@@ -148,7 +145,7 @@ jobs:
         working-directory: ./blocks
         run: |
           echo "✅ Validating README content..."
-          if ! grep -q "npm install @blueacorn/storefront-storelocator" README.md; then
+          if ! grep -q "npm install @blueacorninc/storefront-storelocator" README.md; then
             echo "❌ README missing installation instructions"
             exit 1
           fi

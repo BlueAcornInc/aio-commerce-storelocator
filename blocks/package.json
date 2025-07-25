@@ -1,5 +1,5 @@
 {
-  "name": "@blueacorn/storefront-storelocator",
+  "name": "@blueacorninc/storefront-storelocator",
   "version": "1.0.0",
   "description": "Store Locator block for Adobe Commerce Storefront",
   "main": "index.js",
