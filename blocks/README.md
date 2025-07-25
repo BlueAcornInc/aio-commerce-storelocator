@@ -13,6 +13,8 @@ This npm package provides a Store Locator block that can be easily installed int
 
 ### Install via npm
 
+> **Note:** This installation method has not been independently verified. Please use with care and review the changes after installation.
+
 To install the Store Locator blocks in your Adobe Commerce Storefront project:
 
 ```bash
