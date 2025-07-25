@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - block-package
     paths:
       - 'blocks/**'
   release:
