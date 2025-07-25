@@ -23,13 +23,18 @@ function copyDirectorySync(src, dest) {
 
 function findBlocksDirectory() {
   let currentDir = process.cwd();
+  const startDir = currentDir;
   
   // Walk up the directory tree to find a blocks directory
   while (currentDir !== path.dirname(currentDir)) {
     const blocksPath = path.join(currentDir, 'blocks');
     
+    // Check if blocks directory exists and we're not in the source package directory
     if (fs.existsSync(blocksPath) && fs.statSync(blocksPath).isDirectory()) {
-      return currentDir;
+      // Make sure we're not trying to install into ourselves
+      if (currentDir !== startDir && currentDir !== __dirname) {
+        return currentDir;
+      }
     }
     
     currentDir = path.dirname(currentDir);
@@ -52,6 +57,19 @@ function installBlocks() {
   
   const sourceBlocksDir = packageDir;
   const targetBlocksDir = path.join(projectRoot, 'blocks');
+  
+  // Safety check: ensure we're not trying to copy into ourselves
+  if (path.resolve(sourceBlocksDir) === path.resolve(targetBlocksDir)) {
+    console.log('✓ Already installed in correct location. No action needed.');
+    return;
+  }
+  
+  // Safety check: ensure target is not a subdirectory of source
+  const relativePath = path.relative(sourceBlocksDir, targetBlocksDir);
+  if (!relativePath.startsWith('..')) {
+    console.error('Error: Cannot install into a subdirectory of the package');
+    process.exit(1);
+  }
   
   try {
     // Ensure target blocks directory exists
