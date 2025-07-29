@@ -1,20 +1,30 @@
 {
-    "name": "@blueacorninc/aio-commerce-storelocator-blocks",
-    "version": "0.1.5",
-    "description": "Store Locator Block Collection for Adobe Commerce Storefront and AEM Edge Delivery Services",
-    "author": {
-        "name": "Sam Davis-Castro",
-        "email": "sam.davis-castro@blueacornici.com"
-    },
-    "contributors": [
-        {
-          "name": "Ryan Barrineau",
-          "email": "ryan.barrineau@blueacornici.com"
-        },
-        {
-          "name": "Doug Hatcher",
-          "email": "doug.hatcher@blueacornici.com"
-        }
-      ],
-    "dependencies": {}
+  "name": "@blueacorninc/storefront-storelocator",
+  "version": "1.0.3",
+  "description": "Store Locator block for Adobe Commerce Storefront",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "keywords": [
+    "adobe-commerce",
+    "eds",
+    "storefront",
+    "store-locator",
+    "blocks"
+  ],
+  "author": "Blue Acorn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlueAcornInc/storefront.git",
+    "directory": "aio/storelocator/blocks"
+  },
+  "files": [
+    "store-locator/**/*",
+    "product-availability/**/*",
+    "example-stores.csv",
+    "postinstall.js",
+    "README.md"
+  ]
 }

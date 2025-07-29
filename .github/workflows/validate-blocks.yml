@@ -1,0 +1,161 @@
+name: Validate Store Locator Blocks
+
+on:
+  pull_request:
+    paths:
+      - 'blocks/**'
+  push:
+    branches:
+      - main
+      - block-package
+    paths:
+      - 'blocks/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Validate package.json
+        working-directory: ./blocks
+        run: |
+          echo "✅ Validating package.json structure..."
+          node -e "
+            const pkg = require('./package.json');
+            const required = ['name', 'version', 'description', 'scripts', 'files'];
+            const missing = required.filter(field => !pkg[field]);
+            if (missing.length > 0) {
+              console.error('❌ Missing required fields:', missing.join(', '));
+              process.exit(1);
+            }
+            if (!pkg.scripts.postinstall) {
+              console.error('❌ Missing postinstall script');
+              process.exit(1);
+            }
+            if (!pkg.files.includes('postinstall.js')) {
+              console.error('❌ postinstall.js not included in files array');
+              process.exit(1);
+            }
+            console.log('✅ package.json validation passed');
+          "
+
+      - name: Check required files exist
+        working-directory: ./blocks
+        run: |
+          echo "✅ Checking required files..."
+          required_files=("postinstall.js" "README.md" "store-locator" "product-availability")
+          for file in "${required_files[@]}"; do
+            if [ ! -e "$file" ]; then
+              echo "❌ Required file/directory missing: $file"
+              exit 1
+            fi
+          done
+          echo "✅ All required files present"
+
+      - name: Validate postinstall script
+        working-directory: ./blocks
+        run: |
+          echo "✅ Validating postinstall script..."
+          node -e "
+            const fs = require('fs');
+            const content = fs.readFileSync('postinstall.js', 'utf8');
+            const requiredFunctions = ['findBlocksDirectory', 'copyDirectorySync', 'installBlocks'];
+            const missingFunctions = requiredFunctions.filter(fn => !content.includes(fn));
+            if (missingFunctions.length > 0) {
+              console.error('❌ Missing required functions in postinstall.js:', missingFunctions.join(', '));
+              process.exit(1);
+            }
+            console.log('✅ postinstall.js validation passed');
+          "
+
+      - name: Test postinstall script syntax
+        working-directory: ./blocks
+        run: |
+          echo "✅ Testing postinstall script syntax..."
+          node -c postinstall.js
+          echo "✅ postinstall.js syntax is valid"
+
+      - name: Simulate package installation
+        working-directory: ./blocks
+        run: |
+          echo "✅ Simulating package installation..."
+          # Create a temporary test project structure (simulating merchant's storefront)
+          mkdir -p /tmp/test-storefront/blocks
+          echo '{"name": "test-storefront"}' > /tmp/test-storefront/package.json
+          
+          # Create a temporary package directory (simulating npm install location)
+          # This simulates where the package would be installed in node_modules
+          mkdir -p /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
+          cp -r $GITHUB_WORKSPACE/blocks/* /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator/
+          
+          # Test the postinstall script from the package directory (simulating npm postinstall)
+          cd /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
+          
+          # Mock the installation process - this should find /tmp/test-storefront and install there
+          node -e "
+            const { installBlocks } = require('./postinstall.js');
+            try {
+              installBlocks();
+              console.log('✅ Package installation simulation successful');
+              
+              // Verify installation worked
+              const fs = require('fs');
+              const path = require('path');
+              if (!fs.existsSync('/tmp/test-storefront/blocks/store-locator')) {
+                throw new Error('store-locator block was not installed');
+              }
+              if (!fs.existsSync('/tmp/test-storefront/blocks/product-availability')) {
+                throw new Error('product-availability block was not installed');
+              }
+              console.log('✅ Installation verification successful');
+            } catch (error) {
+              console.error('❌ Package installation simulation failed:', error.message);
+              process.exit(1);
+            }
+          "
+
+      - name: Check block structure
+        working-directory: ./blocks
+        run: |
+          echo "✅ Validating block structures..."
+          
+          # Check store-locator block
+          if [ ! -f "store-locator/store-locator.js" ] && [ ! -f "store-locator/store-locator.css" ]; then
+            echo "❌ store-locator block missing required files"
+            exit 1
+          fi
+          
+          # Check product-availability block  
+          if [ ! -f "product-availability/product-availability.js" ] && [ ! -f "product-availability/product-availability.css" ]; then
+            echo "❌ product-availability block missing required files"
+            exit 1
+          fi
+          
+          echo "✅ Block structures are valid"
+
+      - name: Validate README
+        working-directory: ./blocks
+        run: |
+          echo "✅ Validating README content..."
+          if ! grep -q "npm install @blueacorninc/storefront-storelocator" README.md; then
+            echo "❌ README missing installation instructions"
+            exit 1
+          fi
+          if ! grep -q "postinstall" README.md; then
+            echo "❌ README missing postinstall information"
+            exit 1
+          fi
+          echo "✅ README validation passed"
+
+      - name: Summary
+        run: |
+          echo "🎉 All validations passed!"
+          echo "📦 Package is ready for publishing"
