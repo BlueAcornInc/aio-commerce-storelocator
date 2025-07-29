@@ -19,7 +19,7 @@ You can find Sources in the Stores menu under Inventory.
 
 ![Add New Sources](img/add-new-source.png)
 
-### Configure Invnetory
+### Configure Inventory
 
 Once sources are added, you can use can add inventory to the sources through Catalog > Products. 
 
