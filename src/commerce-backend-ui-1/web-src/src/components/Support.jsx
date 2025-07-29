@@ -20,8 +20,8 @@ import {
 
 const links = [
     { label: 'Blue Acorn iCi', url: 'https://blueacornici.shop/' },
-    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator-blocks/issues/new' },
-    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator-blocks/issues' },
+    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator/issues/new' },
+    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator/issues' },
     { label: 'Contact Us', url: 'mailto:apps@blueacornici.com' },
     { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
 ]
