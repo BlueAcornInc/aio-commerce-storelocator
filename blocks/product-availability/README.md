@@ -17,7 +17,7 @@ This JavaScript module decorates a block with product availability details based
 ### 2. **Fetch Warehouse Availability**
 - Calls an API to retrieve product availability data.
 - Uses the `sku` from the last recorded `pdp/data` event.
-- **TODO:** Change `baseUrl` for production and remove the `Authorization` token.
+- This block leverage your storefront configuration and expect to use the scripts/commerce.js to get the commerce restApiBaseUrl and restApiToken. You need to ensure those configuration values are set in your configs.json file.
 
 ### 3. **Update Block with Data**
 - If a store is selected, finds the corresponding warehouse and updates the UI.
