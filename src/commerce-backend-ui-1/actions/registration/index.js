@@ -10,33 +10,37 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-async function main() {
-    const extensionId = 'StoreLocator'
+/**
+ * Registers the Store Locator extension menu items and page.
+ * @returns {{statusCode: number, body: object}} The registration response object.
+ */
+function main() {
+  const extensionId = "StoreLocator";
 
-    return {
-        statusCode: 200,
-        body: {
-            registration: {
-                menuItems: [
-                    {
-                        id: `${extensionId}::first`,
-                        title: 'Store Locator',
-                        parent: `${extensionId}::apps`,
-                        sortOrder: 1
-                    },
-                    {
-                        id: `${extensionId}::apps`,
-                        title: 'Store Locator',
-                        isSection: false,
-                        sortOrder: 100
-                    }
-                ],
-                page: {
-                    title: 'Store Locator'
-                }
-            }
-        }
-    }
+  return {
+    statusCode: 200,
+    body: {
+      registration: {
+        menuItems: [
+          {
+            id: `${extensionId}::first`,
+            title: "Store Locator",
+            parent: `${extensionId}::apps`,
+            sortOrder: 1,
+          },
+          {
+            id: `${extensionId}::apps`,
+            title: "Store Locator",
+            isSection: false,
+            sortOrder: 100,
+          },
+        ],
+        page: {
+          title: "Store Locator",
+        },
+      },
+    },
+  };
 }
 
-exports.main = main
+exports.main = main;
