@@ -11,14 +11,14 @@ on:
   workflow_dispatch:
     inputs:
       version_bump:
-        description: 'Version bump type'
+        description: "Version bump type"
         required: true
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
-        - patch
-        - minor
-        - major
+          - patch
+          - minor
+          - major
 
 jobs:
   publish:
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install dependencies
         working-directory: ./blocks
@@ -63,14 +63,14 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
           echo "Branch: $BRANCH_NAME"
           echo "Commit: $COMMIT_SHA"
-          
+
           # Create prerelease version like 1.0.0-block-package.abc1234
           NEW_VERSION="${CURRENT_VERSION}-${BRANCH_NAME}.${COMMIT_SHA}"
           npm version --no-git-tag-version $NEW_VERSION
           echo "New prerelease version: $NEW_VERSION"
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-      - name: Get version from package.json 
+      - name: Get version from package.json
         if: github.event_name != 'workflow_dispatch' && github.ref != 'refs/heads/block-package'
         working-directory: ./blocks
         run: |
@@ -83,7 +83,7 @@ jobs:
           # Check GitHub Packages
           echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          
+
           if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
             echo "Version $VERSION already exists on GitHub Packages. Skipping GitHub publish."
             echo "SKIP_GITHUB_PUBLISH=true" >> $GITHUB_ENV
@@ -91,11 +91,11 @@ jobs:
             echo "Version $VERSION does not exist on GitHub Packages. Proceeding with GitHub publish."
             echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
           fi
-          
+
           # Reset and configure for npmjs.com
           rm -f .npmrc
           echo "registry=https://registry.npmjs.org/" >> .npmrc
-          
+
           # Check npmjs.com (don't need auth for viewing public packages)
           if npm view @blueacornici/storefront-storelocator@$VERSION > /dev/null 2>&1; then
             echo "Version $VERSION already exists on npmjs.com. Skipping npmjs publish."
@@ -104,10 +104,10 @@ jobs:
             echo "Version $VERSION does not exist on npmjs.com. Proceeding with npmjs publish."
             echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
           fi
-          
+
           # Clean up
           rm -f .npmrc
-          
+
           # Set overall skip flag if both are already published
           if [ "$SKIP_GITHUB_PUBLISH" == "true" ] && [ "$SKIP_NPMJS_PUBLISH" == "true" ]; then
             echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
@@ -130,15 +130,15 @@ jobs:
         run: |
           # Clean any existing npmrc
           rm -f .npmrc
-          
+
           # Configure npm for GitHub Packages authentication
           echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          
+
           # Debug: show npm config
           echo "Current npm config:"
           cat .npmrc
-          
+
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to GitHub Packages with beta tag..."
             npm publish --tag beta
@@ -155,21 +155,21 @@ jobs:
         run: |
           # Clean any existing npmrc completely
           rm -f .npmrc
-          
+
           # Configure npm ONLY for npmjs.com
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
-          
+
           # Debug: show npm config
           echo "Current npm config for npmjs.com:"
           cat .npmrc
-          
+
           # Temporarily change package name for npmjs.com (different scope)
           ORIGINAL_NAME=$(npm pkg get name | tr -d '"')
           echo "Original package name: $ORIGINAL_NAME"
           npm pkg set name="@blueacornici/storefront-storelocator"
           echo "Changed package name to: $(npm pkg get name | tr -d '"')"
-          
+
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to npmjs.com with beta tag..."
             npm publish --access public --tag beta --registry https://registry.npmjs.org
@@ -177,7 +177,7 @@ jobs:
             echo "Publishing stable version to npmjs.com with latest tag..."
             npm publish --access public --registry https://registry.npmjs.org
           fi
-          
+
           # Restore original package name
           npm pkg set name="$ORIGINAL_NAME"
           echo "Restored package name to: $(npm pkg get name | tr -d '"')"
@@ -202,27 +202,27 @@ jobs:
           release_name: Store Locator Blocks v${{ env.VERSION }}
           body: |
             ## Store Locator Blocks v${{ env.VERSION }}
-            
+
             ### Installation 
-            
+
             **From npmjs.com:**
             ```bash
             npm install @blueacornici/storefront-storelocator@${{ env.VERSION }}
             ```
-            
+
             **From GitHub Packages:**
             ```bash
             npm install @blueacorninc/storefront-storelocator@${{ env.VERSION }} --registry=https://npm.pkg.github.com
             ```
-            
+
             ### What's Included
             - Store Locator block with interactive maps
             - Product Availability block
             - Automatic installation via postinstall script
-            
+
             ### Changes
             Automated release for blocks package.
-            
+
             ### Registries
             This package is published to both npmjs.com (as @blueacornici/storefront-storelocator) and GitHub Packages (as @blueacorninc/storefront-storelocator).
           draft: false
