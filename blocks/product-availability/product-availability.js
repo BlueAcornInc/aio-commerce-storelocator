@@ -1,4 +1,5 @@
 import { events } from '@dropins/tools/event-bus.js';
+import { getConfigFromSession } from '../../scripts/commerce.js';
 
 export default async function decorate(block) {
   let warehousesAvailability;
@@ -33,17 +34,18 @@ export default async function decorate(block) {
   }
 
   const getWarehousesAvailability = async () => {
+
+    const configData = await getConfigFromSession();
     const config = {
-      // To Do, To-Do. Change baseUrl to production instead of stage
-      baseUrl: 'https://stage-sandbox.m2cloud.blueacorn.net/rest/default/V1/inventory/source-items',
+      baseUrl: `${configData.restApiBaseUrl}/inventory/source-items`,
       product: events._lastEvent?.['pdp/data']?.payload ?? null,
-    }
+        
+    };
     const options = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // To Do, To-Do. Remove this bearer token
-        'Authorization': 'Bearer ci5ewjokz5e39xbskprillktpc1uj7eb',
+        'Authorization': `Bearer ${configData.restApiToken}`,
       },
     };
 
