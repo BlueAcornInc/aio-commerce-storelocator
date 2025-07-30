@@ -18,30 +18,8 @@ The experience will be driven by a combination of this block and the [store-loca
 
 This block is intended to work in concert with the Product Availability block also included in this repository. It fetches store availability works using the native GraphQL APIs that serve availability data. 
 
-### Todo
-
-
 ## Installation
 
 1. Add [this folder](https://da.live/#/blueacorninc/shop/store-locator) to your document-based project:
 
 2. Then configure the [stores sheet](https://da.live/sheet#/blueacorninc/shop/store-locator/stores) to suit your needs. 
-
-### Example Stores Sheet
-
-```
-
-```
-																																	
-																			
-																			
-																			
-																			
-																			
-																			
-																			
-																			
-																			
-																			
-																			
-																			
