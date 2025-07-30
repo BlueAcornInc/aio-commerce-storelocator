@@ -3,6 +3,7 @@
 This npm package provides a Store Locator block that can be easily installed into any Adobe Commerce Storefront project.
 
 ## Features
+
 - Store availability by leveraging native inventory sources
 - Interactive maps using Leaflet.js
 - Store filtering by ZIP code
@@ -18,11 +19,13 @@ This npm package provides a Store Locator block that can be easily installed int
 To install the Store Locator blocks in your Adobe Commerce Storefront project:
 
 **For stable releases (Recommended):**
+
 ```bash
 npm install @blueacornici/storefront-storelocator
 ```
 
 **For beta/testing versions:**
+
 ```bash
 npm install @blueacornici/storefront-storelocator@beta
 ```

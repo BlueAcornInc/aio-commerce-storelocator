@@ -9,49 +9,45 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import {
-    Item,
-    TabList,
-    TabPanels,
-    Tabs
-} from '@adobe/react-spectrum'
-import { Welcome } from './Welcome'
-import { Support } from './Support'
-import { useState } from 'react'
+import { Item, TabList, TabPanels, Tabs } from "@adobe/react-spectrum";
+import { Welcome } from "./Welcome";
+import { Support } from "./Support";
+import { useState } from "react";
 
-export const MainPage = props => {
+export const MainPage = (props) => {
+  const [selectedTab, setSelectedTab] = useState(1);
 
-    const [selectedTab, setSelectedTab] = useState(1)
+  const onSelectionTabChange = (selectedTabKey) => {
+    setSelectedTab(selectedTabKey);
+  };
 
-    const onSelectionTabChange = selectedTabKey => {
-        setSelectedTab(selectedTabKey)
-    }
+  const tabs = [
+    {
+      id: 1,
+      name: "Welcome",
+      children: <Welcome runtime={props.runtime} ims={props.ims} />,
+    },
+    {
+      id: 2,
+      name: "Support",
+      children: <Support runtime={props.runtime} ims={props.ims} />,
+    },
+  ];
 
-    const tabs = [
-        {
-            id: 1,
-            name: 'Welcome',
-            children: <Welcome runtime={props.runtime} ims={props.ims} />
-        },
-        {
-            id: 2,
-            name: 'Support',
-            children: <Support runtime={props.runtime} ims={props.ims} />
-        }
-    ]
-
-    return (
-        <Tabs
-            aria-label="Commerce data"
-            items={tabs}
-            orientation="horizontal"
-            isEmphasized={true}
-            selectedKey={selectedTab}
-            onSelectionChange={onSelectionTabChange}
-            margin={10}
-        >
-            <TabList>{item => <Item key={item.id}>{item.name}</Item>}</TabList>
-            <TabPanels>{item => <Item key={item.id}>{item.children}</Item>}</TabPanels>
-        </Tabs>
-    )
-}
+  return (
+    <Tabs
+      aria-label="Commerce data"
+      items={tabs}
+      orientation="horizontal"
+      isEmphasized={true}
+      selectedKey={selectedTab}
+      onSelectionChange={onSelectionTabChange}
+      margin={10}
+    >
+      <TabList>{(item) => <Item key={item.id}>{item.name}</Item>}</TabList>
+      <TabPanels>
+        {(item) => <Item key={item.id}>{item.children}</Item>}
+      </TabPanels>
+    </Tabs>
+  );
+};

@@ -9,27 +9,25 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { register } from '@adobe/uix-guest'
-import { MainPage } from './MainPage'
-import { useEffect } from 'react'
+import { register } from "@adobe/uix-guest";
+import { MainPage } from "./MainPage";
+import { useEffect } from "react";
 
 export default function ExtensionRegistration(props) {
   useEffect(() => {
     // This effect runs once when the component mounts
     // It can be used to perform any setup or initialization
-      init().catch(console.error)
-  }, [])
+    init().catch(console.error);
+  }, []);
 
-  return <MainPage runtime={props.runtime} ims={props.ims} />
+  return <MainPage runtime={props.runtime} ims={props.ims} />;
 }
 
 const init = async () => {
-
-  const extensionId = 'store-locator'
+  const extensionId = "store-locator";
 
   await register({
     id: extensionId,
-    methods: {
-    }
-  })
-}
+    methods: {},
+  });
+};

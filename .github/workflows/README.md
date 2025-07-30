@@ -9,11 +9,13 @@ This directory contains GitHub Actions workflows for managing the Store Locator 
 Automatically publishes the blocks package to GitHub Packages npm registry.
 
 **Triggers:**
+
 - **Push to main** (when `blocks/` directory changes) - Auto-publishes if version doesn't exist
 - **Release published** - Publishes the package with the release version
 - **Manual dispatch** - Allows manual publishing with version bump
 
 **Manual Publishing:**
+
 1. Go to Actions tab in GitHub
 2. Select "Publish Store Locator Blocks to GitHub Packages"
 3. Click "Run workflow"
@@ -21,6 +23,7 @@ Automatically publishes the blocks package to GitHub Packages npm registry.
 5. Run workflow
 
 **Features:**
+
 - ✅ Automatic version bumping (when manually triggered)
 - ✅ Duplicate version detection
 - ✅ GitHub Packages publishing
@@ -32,10 +35,12 @@ Automatically publishes the blocks package to GitHub Packages npm registry.
 Validates the blocks package structure and functionality.
 
 **Triggers:**
+
 - **Pull requests** affecting `blocks/` directory
 - **Push to main** affecting `blocks/` directory
 
 **Validations:**
+
 - ✅ package.json structure and required fields
 - ✅ Required files and directories exist
 - ✅ postinstall.js script functionality
