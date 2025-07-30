@@ -3,18 +3,18 @@ name: Validate Store Locator Blocks
 on:
   pull_request:
     paths:
-      - 'blocks/**'
+      - "blocks/**"
   push:
     branches:
       - main
       - block-package
     paths:
-      - 'blocks/**'
+      - "blocks/**"
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Validate package.json
         working-directory: ./blocks
@@ -90,15 +90,15 @@ jobs:
           # Create a temporary test project structure (simulating merchant's storefront)
           mkdir -p /tmp/test-storefront/blocks
           echo '{"name": "test-storefront"}' > /tmp/test-storefront/package.json
-          
+
           # Create a temporary package directory (simulating npm install location)
           # This simulates where the package would be installed in node_modules
           mkdir -p /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
           cp -r $GITHUB_WORKSPACE/blocks/* /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator/
-          
+
           # Test the postinstall script from the package directory (simulating npm postinstall)
           cd /tmp/test-storefront/node_modules/@blueacorninc/storefront-storelocator
-          
+
           # Mock the installation process - this should find /tmp/test-storefront and install there
           node -e "
             const { installBlocks } = require('./postinstall.js');
@@ -126,19 +126,19 @@ jobs:
         working-directory: ./blocks
         run: |
           echo "✅ Validating block structures..."
-          
+
           # Check store-locator block
           if [ ! -f "store-locator/store-locator.js" ] && [ ! -f "store-locator/store-locator.css" ]; then
             echo "❌ store-locator block missing required files"
             exit 1
           fi
-          
+
           # Check product-availability block  
           if [ ! -f "product-availability/product-availability.js" ] && [ ! -f "product-availability/product-availability.css" ]; then
             echo "❌ product-availability block missing required files"
             exit 1
           fi
-          
+
           echo "✅ Block structures are valid"
 
       - name: Validate README

@@ -9,41 +9,45 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import {
-    View,
-    Grid,
-    Text
-} from '@adobe/react-spectrum'
+import { View, Grid, Text } from "@adobe/react-spectrum";
 
 const links = [
-    { label: 'Blue Acorn iCi', url: 'https://blueacornici.shop/' },
-    { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator/issues/new' },
-    { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-storelocator/issues' },
-    { label: 'Contact Us', url: 'mailto:apps@blueacornici.com' },
-    { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
-]
+  { label: "Blue Acorn iCi", url: "https://blueacornici.shop/" },
+  {
+    label: "Create an Issue",
+    url: "https://github.com/BlueAcornInc/aio-commerce-storelocator/issues/new",
+  },
+  {
+    label: "Issue Tracker",
+    url: "https://github.com/BlueAcornInc/aio-commerce-storelocator/issues",
+  },
+  { label: "Contact Us", url: "mailto:apps@blueacornici.com" },
+  { label: "Documentation", url: "https://apps.blueacornici.shop/" },
+];
 
-export const Support = props => {
-    return (
-        <View paddingTop="size-400">
-            <Grid
-                columns={['1fr 1fr']}
-                gap="size-200"
-                width="size-3600"
+export const Support = (props) => {
+  return (
+    <View paddingTop="size-400">
+      <Grid columns={["1fr 1fr"]} gap="size-200" width="size-3600">
+        {links.map((link) => (
+          <View
+            key={link.url}
+            borderWidth="thin"
+            borderColor="dark"
+            padding="size-200"
+            borderRadius="medium"
+          >
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "inherit" }}
             >
-                {links.map(link => (
-                    <View key={link.url} borderWidth="thin" borderColor="dark" padding="size-200" borderRadius="medium">
-                        <a
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                        >
-                            <Text>{link.label}</Text>
-                        </a>
-                    </View>
-                ))}
-            </Grid>
-        </View>
-    )
-}
+              <Text>{link.label}</Text>
+            </a>
+          </View>
+        ))}
+      </Grid>
+    </View>
+  );
+};
