@@ -1,0 +1,259 @@
+name: Publish Store Locator Blocks to GitHub Packages
+
+on:
+  push:
+    branches:
+      - block-package
+    # paths:
+    #   - 'blocks/**'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./blocks
+        run: npm install --ignore-scripts
+
+      - name: Bump version (if manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: ./blocks
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Auto-bump version for testing branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/block-package'
+        working-directory: ./blocks
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          # Get current version and create a prerelease version with branch name
+          CURRENT_VERSION=$(npm pkg get version | tr -d '\"')
+          BRANCH_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9]/-/g')
+          COMMIT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "Current version: $CURRENT_VERSION"
+          echo "Branch: $BRANCH_NAME"
+          echo "Commit: $COMMIT_SHA"
+          
+          # Create prerelease version like 1.0.0-block-package.abc1234
+          NEW_VERSION="${CURRENT_VERSION}-${BRANCH_NAME}.${COMMIT_SHA}"
+          npm version --no-git-tag-version $NEW_VERSION
+          echo "New prerelease version: $NEW_VERSION"
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Get version from package.json 
+        if: github.event_name != 'workflow_dispatch' && github.ref != 'refs/heads/block-package'
+        working-directory: ./blocks
+        run: |
+          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Check if version already exists
+        if: github.ref != 'refs/heads/block-package'
+        working-directory: ./blocks
+        run: |
+          # Check GitHub Packages
+          echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
+          if npm view @blueacorninc/storefront-storelocator@$VERSION > /dev/null 2>&1; then
+            echo "Version $VERSION already exists on GitHub Packages. Skipping GitHub publish."
+            echo "SKIP_GITHUB_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION does not exist on GitHub Packages. Proceeding with GitHub publish."
+            echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
+          fi
+          
+          # Reset and configure for npmjs.com
+          rm -f .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          
+          # Check npmjs.com (don't need auth for viewing public packages)
+          if npm view @blueacornici/storefront-storelocator@$VERSION > /dev/null 2>&1; then
+            echo "Version $VERSION already exists on npmjs.com. Skipping npmjs publish."
+            echo "SKIP_NPMJS_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION does not exist on npmjs.com. Proceeding with npmjs publish."
+            echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
+          fi
+          
+          # Clean up
+          rm -f .npmrc
+          
+          # Set overall skip flag if both are already published
+          if [ "$SKIP_GITHUB_PUBLISH" == "true" ] && [ "$SKIP_NPMJS_PUBLISH" == "true" ]; then
+            echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+          fi
+        continue-on-error: true
+
+      - name: Skip version check for testing branch
+        if: github.ref == 'refs/heads/block-package'
+        run: |
+          echo "Testing branch detected - auto-incremented version $VERSION, proceeding with publish."
+          echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+          echo "SKIP_GITHUB_PUBLISH=false" >> $GITHUB_ENV
+          echo "SKIP_NPMJS_PUBLISH=false" >> $GITHUB_ENV
+
+      - name: Publish to GitHub Packages
+        if: env.SKIP_GITHUB_PUBLISH == 'false'
+        working-directory: ./blocks
+        run: |
+          # Clean any existing npmrc
+          rm -f .npmrc
+          
+          # Configure npm for GitHub Packages authentication
+          echo "@blueacorninc:registry=https://npm.pkg.github.com/" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+          
+          # Debug: show npm config
+          echo "Current npm config:"
+          cat .npmrc
+          
+          if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
+            echo "Publishing prerelease version to GitHub Packages with beta tag..."
+            npm publish --tag beta
+          else
+            echo "Publishing stable version to GitHub Packages with latest tag..."
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npmjs.com
+        if: env.SKIP_NPMJS_PUBLISH == 'false'
+        working-directory: ./blocks
+        run: |
+          # Clean any existing npmrc completely
+          rm -f .npmrc
+          
+          # Configure npm ONLY for npmjs.com
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+          
+          # Debug: show npm config
+          echo "Current npm config for npmjs.com:"
+          cat .npmrc
+          
+          # Temporarily change package name for npmjs.com (different scope)
+          ORIGINAL_NAME=$(npm pkg get name | tr -d '"')
+          echo "Original package name: $ORIGINAL_NAME"
+          npm pkg set name="@blueacornici/storefront-storelocator"
+          echo "Changed package name to: $(npm pkg get name | tr -d '"')"
+          
+          if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
+            echo "Publishing prerelease version to npmjs.com with beta tag..."
+            npm publish --access public --tag beta --registry https://registry.npmjs.org
+          else
+            echo "Publishing stable version to npmjs.com with latest tag..."
+            npm publish --access public --registry https://registry.npmjs.org
+          fi
+          
+          # Restore original package name
+          npm pkg set name="$ORIGINAL_NAME"
+          echo "Restored package name to: $(npm pkg get name | tr -d '"')"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Git tag (if manual trigger and published)
+        if: github.event_name == 'workflow_dispatch' && (env.SKIP_GITHUB_PUBLISH == 'false' || env.SKIP_NPMJS_PUBLISH == 'false')
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "blocks-v${{ env.VERSION }}"
+          git push origin "blocks-v${{ env.VERSION }}"
+
+      - name: Create GitHub Release (if manual trigger and published)
+        if: github.event_name == 'workflow_dispatch' && (env.SKIP_GITHUB_PUBLISH == 'false' || env.SKIP_NPMJS_PUBLISH == 'false')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: blocks-v${{ env.VERSION }}
+          release_name: Store Locator Blocks v${{ env.VERSION }}
+          body: |
+            ## Store Locator Blocks v${{ env.VERSION }}
+            
+            ### Installation 
+            
+            **From npmjs.com:**
+            ```bash
+            npm install @blueacornici/storefront-storelocator@${{ env.VERSION }}
+            ```
+            
+            **From GitHub Packages:**
+            ```bash
+            npm install @blueacorninc/storefront-storelocator@${{ env.VERSION }} --registry=https://npm.pkg.github.com
+            ```
+            
+            ### What's Included
+            - Store Locator block with interactive maps
+            - Product Availability block
+            - Automatic installation via postinstall script
+            
+            ### Changes
+            Automated release for blocks package.
+            
+            ### Registries
+            This package is published to both npmjs.com (as @blueacornici/storefront-storelocator) and GitHub Packages (as @blueacorninc/storefront-storelocator).
+          draft: false
+          prerelease: false
+
+      - name: Output results
+        run: |
+          if [ "$SKIP_PUBLISH" == "true" ]; then
+            echo "✅ Version $VERSION already exists on both registries - skipped publish"
+          else
+            echo "🎉 Publishing results for version $VERSION:"
+            
+            if [ "$SKIP_GITHUB_PUBLISH" == "false" ]; then
+              echo "✅ Successfully published to GitHub Packages: @blueacorninc/storefront-storelocator@$VERSION"
+              echo "📦 GitHub Packages: https://github.com/BlueAcornInc/storefront/packages"
+            else
+              echo "⏭️  Skipped GitHub Packages (version already exists)"
+            fi
+            
+            if [ "$SKIP_NPMJS_PUBLISH" == "false" ]; then
+              echo "✅ Successfully published to npmjs.com: @blueacornici/storefront-storelocator@$VERSION"
+              echo "📦 npmjs.com: https://www.npmjs.com/package/@blueacornici/storefront-storelocator"
+            else
+              echo "⏭️  Skipped npmjs.com (version already exists)"
+            fi
+            
+            if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
+              echo ""
+              echo "🧪 This was a prerelease publish from block-package branch"
+              echo "📝 Install from npmjs.com: npm install @blueacornici/storefront-storelocator@$VERSION"
+              echo "📝 Install from GitHub: npm install @blueacorninc/storefront-storelocator@$VERSION --registry=https://npm.pkg.github.com"
+              echo "📝 Or latest beta from npmjs.com: npm install @blueacornici/storefront-storelocator@beta"
+            fi
+          fi
