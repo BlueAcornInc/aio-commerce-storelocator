@@ -1,6 +1,6 @@
 {
   "name": "store-locator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "dependencies": {
     "@adobe/aio-cli": "^10.3.4",

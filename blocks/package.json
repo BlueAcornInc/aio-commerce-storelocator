@@ -1,6 +1,6 @@
 {
   "name": "@blueacorninc/storefront-storelocator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Store Locator block for Adobe Commerce Storefront",
   "main": "index.js",
   "scripts": {
