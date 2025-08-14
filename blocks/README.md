@@ -70,7 +70,7 @@ The postinstall script will automatically copy the store locator blocks to your 
 Alternatively, you can manually copy the blocks:
 
 1. Download or clone this repository
-2. Copy the `store-locator/` and `product-availability/` directories from `aio/storelocator/blocks/` to your storefront's `blocks/` directory
+2. Copy the `store-locator/` and `product-availability/` directories from `blocks/` to your storefront's `blocks/` directory
 3. The blocks will be available at `/blocks/store-locator` and `/blocks/product-availability`
 
 ### Verify Installation
