@@ -4,4 +4,3 @@ extensions:
 requiredProducts:
   - code: COMMC
     minVersion: 2.4.7
-    maxVersion: 2.4.99

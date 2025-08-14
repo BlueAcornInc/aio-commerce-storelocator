@@ -49,13 +49,25 @@ This guide will walk a merchant or a developer through how to set up this projec
 ### Pre-Reqs
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
-- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.x or higher.
-- **Adobe I/O CLI:** For deploying App Builder actions.
+- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.7 or higher.
+- **Adobe I/O CLI and plugins:** For deploying App Builder actions. 
+  - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
+  - Plugins:
+
+  ```bash
+  $ aio plugins:install @adobe/aio-cli-plugin-api-mesh
+  $ aio plugins:install @adobe/aio-cli-plugin-commerce
+  ```
+
+- **Adobe Commerce Modules (PaaS and On-Prem only)**:
+  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.0.0)
+  - Storefront extension module (adobe-commerce/storefront-compatibility)
+  - IMS module (adobe-commerce/adobe-ims-metapackage)
 
 * Local evironment running linux or compatible (i.e. MacOS or Windows with WCL2)
-  - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman
+  - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman. The devcontainer is only available from the GitHub repository (https://github.com/BlueAcornInc/aio-commerce-storelocator).
 
-### Setup SaaS and Storefront
+### Setup Storefront
 
 If you haven't already, we need to prepare the project and workspaces within our Adobe App Builder organization, as well as the code repos that represent Adobe Commerce Storefront and any additional public apps you may need to use.
 
@@ -65,6 +77,8 @@ If you haven't already, we need to prepare the project and workspaces within our
 $ gh auth login
 $ aio commerce init
 ```
+
+For Adobe Commerce Cloud and on-premise installation, you will need to install Adobe Storefront compatibility package, a PHP module. See [Adobe Experience League](https://experienceleague.adobe.com/developer/commerce/storefront/setup/configuration/storefront-compatibility/install/) article for the complete procedure.
 
 ### Deploy The App
 
@@ -127,14 +141,19 @@ Behind the scenes, there is an app repository this gets registered with. It is e
 - [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
 
 #### Setting up Admin UI SDK
+Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
 
-Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs.
+  ```bash
+  composer require "magento/commerce-backend-sdk": ">=3.0"
+  ```
+
+Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
 
 ### Running Locally
 
 ![Running Admin UI SDK Locally](docs/img/admin-ui-sdk-setup.png)
 
-Once setup, click **Refresh Registrations** to bring in the app. This will expose the App in the _Apps_ section of the Main Admin Menu.
+Once setup, click **Refresh Registrations** to bring in the app. This will expose the App in the _Store Locator_ section of the Main Admin Menu.
 
 # Configuration
 
@@ -150,7 +169,7 @@ You can find Sources in the Stores menu under Inventory.
 
 ![Add New Sources](docs/img/add-new-source.png)
 
-### Configure Invnetory
+### Configure Inventory
 
 Once sources are added, you can use can add inventory to the sources through Catalog > Products.
 
@@ -167,11 +186,6 @@ Once sources are added, you can use can add inventory to the sources through Cat
 
 By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
 local serverless stack and also run your actions locally use the `aio app run --local` option.
-
-## Test & Coverage
-
-- Run `aio app test` to run unit tests for ui and actions
-- Run `aio app test --e2e` to run e2e tests
 
 ## Deploy & Cleanup
 
@@ -192,44 +206,11 @@ You can generate this file using the command `aio app use`.
 # AIO_RUNTIME_NAMESPACE=
 ```
 
-### `app.config.yaml`
-
-- Main configuration file that defines an application's implementation.
-- More information on this file, application configuration, and extension configuration
-  can be found [here](https://developer.adobe.com/app-builder/docs/guides/appbuilder-configuration/#appconfigyaml)
-
-#### Action Dependencies
-
-- You have two options to resolve your actions' dependencies:
-  1. **Packaged action file**: Add your action's dependencies to the root
-     `package.json` and install them using `npm install`. Then set the `function`
-     field in `app.config.yaml` to point to the **entry file** of your action
-     folder. We will use `webpack` to package your code and dependencies into a
-     single minified js file. The action will then be deployed as a single file.
-     Use this method if you want to reduce the size of your actions.
-
-  2. **Zipped action folder**: In the folder containing the action code add a
-     `package.json` with the action's dependencies. Then set the `function`
-     field in `app.config.yaml` to point to the **folder** of that action. We will
-     install the required dependencies within that directory and zip the folder
-     before deploying it as a zipped action. Use this method if you want to keep
-     your action's dependencies separated.
-
 ## Debugging in VS Code
 
 While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
 and select the debugging configuration called `WebAndActions`.
 Alternatively, there are also debug configs for only UI and each separate action.
 
-## Typescript support for UI
-
-To use typescript use `.tsx` extension for react components and add a `tsconfig.json`
-and make sure you have the below config added
-
-```
- {
-  "compilerOptions": {
-      "jsx": "react"
-    }
-  }
-```
+## Use on Storefront frontend
+See [blocks/README.md](blocks/README.md)

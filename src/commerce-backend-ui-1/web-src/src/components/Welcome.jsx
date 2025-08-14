@@ -72,7 +72,7 @@ export const Welcome = (props) => {
           </a>
           .<br />
           2. Copy in our{" "}
-          <a href="https://github.com/BlueAcornInc/aio-commerce-storelocator-blocks">
+          <a href="https://github.com/BlueAcornInc/aio-commerce-storelocator">
             Shared Blocks
           </a>{" "}
           into your Storefront
