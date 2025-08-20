@@ -50,7 +50,7 @@ This guide will walk a merchant or a developer through how to set up this projec
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
 - **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.7 or higher.
-- **Adobe I/O CLI and plugins:** For deploying App Builder actions. 
+- **Adobe I/O CLI and plugins:** For deploying App Builder actions.
   - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
   - Plugins:
 
@@ -141,11 +141,12 @@ Behind the scenes, there is an app repository this gets registered with. It is e
 - [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
 
 #### Setting up Admin UI SDK
+
 Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
 
-  ```bash
-  composer require "magento/commerce-backend-sdk": ">=3.0"
-  ```
+```bash
+composer require "magento/commerce-backend-sdk": ">=3.0"
+```
 
 Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
 
@@ -213,4 +214,5 @@ and select the debugging configuration called `WebAndActions`.
 Alternatively, there are also debug configs for only UI and each separate action.
 
 ## Use on Storefront frontend
+
 See [blocks/README.md](blocks/README.md)
