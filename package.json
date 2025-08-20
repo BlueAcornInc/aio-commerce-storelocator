@@ -11,6 +11,7 @@
     "@adobe/uix-guest": "^1.0.3",
     "@spectrum-icons/workflow": "^4.2.23",
     "core-js": "^3.44.0",
+    "husky": "^9.1.7",
     "oauth-1.0a": "^2.2.6",
     "os-browserify": "^0.3.0",
     "package-lock.json": "^1.0.0",
@@ -44,7 +45,8 @@
     "format:check": "npx prettier . --check",
     "format:fix": "npm run format:check -- --write",
     "code:check": "npm run format:check && npm run lint:check",
-    "code:fix": "npm run format:fix && npm run lint:fix"
+    "code:fix": "npm run format:fix && npm run lint:fix",
+    "prepare": "husky"
   },
   "engines": {
     "node": "^16.13 || >=18"
