@@ -33,6 +33,7 @@ function main() {
             title: "Store Locator",
             isSection: false,
             sortOrder: 100,
+            sandbox: "allow-popups"
           },
         ],
         page: {
