@@ -91,6 +91,8 @@ aio console project select
 aio console workspace select
 aio app use
 
+npm install
+
 aio app deploy # this will build the app and register it for use in Adobe Commerce
 ```
 
