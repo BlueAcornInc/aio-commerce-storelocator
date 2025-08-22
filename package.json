@@ -1,6 +1,24 @@
 {
   "name": "store-locator",
   "version": "1.0.4",
+  "author": {
+    "name": "Doug Hatcher",
+    "email": "doug.hatcher@blueacornici.com"
+  },
+  "contributors": [
+    {
+      "name": "Sam Davis-Castro",
+      "email": "sam.davis-castro@blueacornici.com"
+    },
+    {
+      "name": "Ryan Barrineau",
+      "email": "ryan.barrineau@blueacornici.com"
+    },
+    {
+      "name": "Maxime Carey",
+      "email": "maxime.carey@blueacornici.com"
+    }
+  ],
   "private": true,
   "dependencies": {
     "@adobe/aio-cli": "^10.3.4",
