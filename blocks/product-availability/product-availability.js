@@ -49,7 +49,7 @@ export default async function decorate(block) {
 
     const data = fetch(
       `${config.baseUrl}?searchCriteria[filter_groups][0][filters][0][field]=sku&searchCriteria[filter_groups][0][filters][0][value]=${config.product.sku}&searchCriteria[filter_groups][0][filters][0][condition_type]=eq`,
-      options,
+      options
     )
       .then((response) => {
         if (!response.ok) {
