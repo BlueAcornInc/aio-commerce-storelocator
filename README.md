@@ -56,7 +56,7 @@ This guide will walk a merchant or a developer through how to set up this projec
 
   ```bash
   $ aio plugins:install @adobe/aio-cli-plugin-api-mesh
-  $ aio plugins:install https://github.com/adobe-commerce/aio-cli-plugin-commerce 
+  $ aio plugins:install https://github.com/adobe-commerce/aio-cli-plugin-commerce
   ```
 
 - **Adobe Commerce Modules (PaaS and On-Prem only)**:
