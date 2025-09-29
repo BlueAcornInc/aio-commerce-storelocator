@@ -18,3 +18,14 @@ runtimeManifest:
           annotations:
             require-adobe-auth: true
             final: false
+        warehouse-availability:
+          function: actions/warehouse-availability/index.js
+          web: "yes"
+          runtime: "nodejs:22"
+          inputs:
+            LOG_LEVEL: debug
+            url: ${COMMERCE_ENDPOINT}
+            token: ${AIO_runtime_auth}
+          annotations:
+            require-adobe-auth: false
+            final: false
