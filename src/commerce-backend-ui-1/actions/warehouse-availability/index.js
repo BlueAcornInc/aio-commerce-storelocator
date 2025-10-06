@@ -1,6 +1,5 @@
   async function main (params) {
     const { url, token } = params;
-    const configData = await getConfigFromSession();
     const config = {
       baseUrl: `${configData.restApiBaseUrl}/inventory/source-items`,
       product: events._lastEvent?.["pdp/data"]?.payload ?? null,

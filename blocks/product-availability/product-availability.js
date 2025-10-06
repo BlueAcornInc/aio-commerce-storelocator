@@ -33,38 +33,6 @@ export default async function decorate(block) {
     storeAddressEl.innerText = `${store.address}\n ${store.city}, ${store.state} ${store.zip}`;
   };
 
-  const getWarehousesAvailability = async () => {
-    const configData = await getConfigFromSession();
-    const config = {
-      baseUrl: `${configData.restApiBaseUrl}/inventory/source-items`,
-      product: events._lastEvent?.["pdp/data"]?.payload ?? null,
-    };
-    const options = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${configData.restApiToken}`,
-      },
-    };
-
-    const data = fetch(
-      `${config.baseUrl}?searchCriteria[filter_groups][0][filters][0][field]=sku&searchCriteria[filter_groups][0][filters][0][value]=${config.product.sku}&searchCriteria[filter_groups][0][filters][0][condition_type]=eq`,
-      options
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((responseData) => {
-        return responseData;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    return data;
-  };
   if (myStore) {
     myWarehouseId = myStore.commerce_warehouse_id;
   } else {
@@ -85,9 +53,9 @@ export default async function decorate(block) {
       updateBlock(myStore, myWarehouse);
     }
   };
-  warehousesAvailability = await getWarehousesAvailability();
+  warehousesAvailability = await fetch(`https://localhost:9080/api/v1/web/admin-ui-sdk/warehouse-availability`);
   if (myWarehouseId) {
-    setWarehouse(warehousesAvailability);
+    setWarehouse(warehousesAvailability);y
   }
 
   document.addEventListener("updateAvailability", () => {
