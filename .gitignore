@@ -41,3 +41,4 @@ coverage
 logs
 
 ignore-me
+*.crt
