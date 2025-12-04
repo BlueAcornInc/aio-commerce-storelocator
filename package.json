@@ -42,6 +42,7 @@
     "regenerator-runtime": "^0.13.11"
   },
   "devDependencies": {
+    "@adobe-commerce/commerce-extensibility-tools": "^1.6.0",
     "@adobe/eslint-config-aio-lib-config": "^4.0.0",
     "@babel/core": "^7.28.0",
     "@babel/eslint-parser": "^7.28.0",
