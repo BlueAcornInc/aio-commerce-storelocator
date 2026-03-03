@@ -17,4 +17,4 @@ runtimeManifest:
             LOG_LEVEL: debug
           annotations:
             require-adobe-auth: true
-            final: false
+            final: true
