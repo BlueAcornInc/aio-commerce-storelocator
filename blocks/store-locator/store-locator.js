@@ -297,8 +297,8 @@ export default async function decorate(block) {
             markers[i]._icon.style.pointerEvents = "none";
           } else {
             card.classList.remove("hidden");
-            markers[i]._icon.style.opacity = "100%";
             markers[i]._icon.style.opacity = "inherit";
+            markers[i]._icon.style.pointerEvents = "";
           }
         });
       });
