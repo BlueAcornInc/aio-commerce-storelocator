@@ -212,104 +212,117 @@ export default async function decorate(block) {
   mapContainer.style.height = "500px";
   block.appendChild(mapContainer);
 
-  setTimeout(() => {
-    const { L } = window;
-    const map = L.map("map");
-
-    map.setView([stores.data[0].lat, stores.data[0].lng], 10);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
-    L.control
-      .zoom({
-        position: "topright",
-      })
-      .addTo(map);
-
-    // create store card container
-    const container = createStoreCardContainer();
-    // create ZIP filter
-    const filter = createStoreCardZipFilter();
-
-    block.appendChild(filter);
-    block.appendChild(container);
-    stores.data.forEach((store, i) => {
-      // create store card
-      const storeCard = createStoreCard(store, storeCardDisplayOrder, i);
-      container.appendChild(storeCard);
-      // Add marker to the map if store has lat and lng
-      if (store.lat && store.lng) {
-        const customIcon = L.divIcon({
-          className: "blue-acorn__icon",
-          iconSize: 40,
-        });
-        const marker = L.marker([store.lat, store.lng], {
-          icon: customIcon,
-        }).addTo(map);
-        markers.push(marker);
-        marker.bindPopup(
-          `<div class='leaflet-popup-content__container'  data-store-map-num=${i + 1}><p>${i + 1}</p></div>`
-        );
-        marker.addEventListener("click", () => {
-          emitCustomEvent("storeNum", { num: i + 1 });
-          emitCustomEvent("updateAvailability");
-        });
-      }
+  /** Wait for Leaflet to load before initializing the map. */
+  function waitForLeaflet(maxAttempts = 50, interval = 100) {
+    return new Promise((resolve, reject) => {
+      let attempts = 0;
+      const check = () => {
+        if (window.L) {
+          resolve(window.L);
+        } else if (++attempts >= maxAttempts) {
+          reject(new Error("[store-locator] Leaflet did not load in time"));
+        } else {
+          setTimeout(check, interval);
+        }
+      };
+      check();
     });
+  }
 
-    document.addEventListener("storeNum", (e) => {
-      const currentCard = cards[e.detail.num - 1];
-      const currentMarker = markers[e.detail.num - 1];
-      const currentStore = stores.data[e.detail.num - 1];
-      currentStore.number = e.detail.num;
-      window?.sessionStorage.setItem("myStore", JSON.stringify(currentStore));
-      cards.forEach((card) => {
-        card.classList.remove("selected");
+  const L = await waitForLeaflet();
+  const map = L.map("map");
+
+  map.setView([stores.data[0].lat, stores.data[0].lng], 10);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
+  L.control
+    .zoom({
+      position: "topright",
+    })
+    .addTo(map);
+
+  // create store card container
+  const container = createStoreCardContainer();
+  // create ZIP filter
+  const filter = createStoreCardZipFilter();
+
+  block.appendChild(filter);
+  block.appendChild(container);
+  stores.data.forEach((store, i) => {
+    // create store card
+    const storeCard = createStoreCard(store, storeCardDisplayOrder, i);
+    container.appendChild(storeCard);
+    // Add marker to the map if store has lat and lng
+    if (store.lat && store.lng) {
+      const customIcon = L.divIcon({
+        className: "blue-acorn__icon",
+        iconSize: 40,
       });
-
-      currentCard.classList.add("selected");
-      selectedStoreEl.innerText = ` Store: ${e.detail.num}.`;
-
-      const cardRect = currentCard.getBoundingClientRect();
-      if (window.innerWidth > 990) {
-        container.scrollBy({
-          left: 0,
-          top: cardRect.top - container.getBoundingClientRect().top - 64,
-          behavior: "smooth",
-        });
-      } else {
-        container.scrollBy({
-          left: cardRect.left - (innerWidth / 2 - cardRect.width / 2),
-          top: 0,
-          behavior: "smooth",
-        });
-      }
-      currentMarker.openPopup();
-      map.panTo(currentMarker.getLatLng());
-    });
-
-    document
-      .querySelector(".zip-form__button")
-      .addEventListener("click", (e) => {
-        const {
-          previousElementSibling: { value },
-        } = e.target;
-        e.preventDefault();
-
-        cards.forEach((card, i) => {
-          if (!card.dataset.zip.startsWith(value)) {
-            card.classList.add("hidden");
-            markers[i]._icon.style.opacity = "50%";
-            markers[i]._icon.style.pointerEvents = "none";
-          } else {
-            card.classList.remove("hidden");
-            markers[i]._icon.style.opacity = "inherit";
-            markers[i]._icon.style.pointerEvents = "";
-          }
-        });
+      const marker = L.marker([store.lat, store.lng], {
+        icon: customIcon,
+      }).addTo(map);
+      markers.push(marker);
+      marker.bindPopup(
+        `<div class='leaflet-popup-content__container'  data-store-map-num=${i + 1}><p>${i + 1}</p></div>`
+      );
+      marker.addEventListener("click", () => {
+        emitCustomEvent("storeNum", { num: i + 1 });
+        emitCustomEvent("updateAvailability");
       });
-    if (myStoreSession) {
-      container?.children[myStoreSession?.number - 1]?.click();
     }
-  }, 200);
+  });
+
+  document.addEventListener("storeNum", (e) => {
+    const currentCard = cards[e.detail.num - 1];
+    const currentMarker = markers[e.detail.num - 1];
+    const currentStore = stores.data[e.detail.num - 1];
+    currentStore.number = e.detail.num;
+    window?.sessionStorage.setItem("myStore", JSON.stringify(currentStore));
+    cards.forEach((card) => {
+      card.classList.remove("selected");
+    });
+
+    currentCard.classList.add("selected");
+    selectedStoreEl.innerText = ` Store: ${e.detail.num}.`;
+
+    const cardRect = currentCard.getBoundingClientRect();
+    if (window.innerWidth > 990) {
+      container.scrollBy({
+        left: 0,
+        top: cardRect.top - container.getBoundingClientRect().top - 64,
+        behavior: "smooth",
+      });
+    } else {
+      container.scrollBy({
+        left: cardRect.left - (innerWidth / 2 - cardRect.width / 2),
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+    currentMarker.openPopup();
+    map.panTo(currentMarker.getLatLng());
+  });
+
+  document.querySelector(".zip-form__button").addEventListener("click", (e) => {
+    const {
+      previousElementSibling: { value },
+    } = e.target;
+    e.preventDefault();
+
+    cards.forEach((card, i) => {
+      if (!card.dataset.zip.startsWith(value)) {
+        card.classList.add("hidden");
+        markers[i]._icon.style.opacity = "50%";
+        markers[i]._icon.style.pointerEvents = "none";
+      } else {
+        card.classList.remove("hidden");
+        markers[i]._icon.style.opacity = "inherit";
+        markers[i]._icon.style.pointerEvents = "";
+      }
+    });
+  });
+  if (myStoreSession) {
+    container?.children[myStoreSession?.number - 1]?.click();
+  }
 }

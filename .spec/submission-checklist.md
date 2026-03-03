@@ -57,7 +57,7 @@ These were not in the reviewer's feedback but are submission guideline violation
 | BLK-1  | Blocks            | `store-locator.js` ~L128 — `tel:${item}` uses string `"phone"` not `store.phone`                                              | 🟢     | ✅ Done        | Copilot      |                                     |
 | BLK-2  | Blocks            | `store-locator.js` ~L229-230 — double opacity set (`"100%"` then `"inherit"`)                                                 | 🟢     | ✅ Done        | Copilot      |                                     |
 | BLK-3  | Blocks            | `store-locator.js` ~L155 — `fetch()` for stores.json has no error handling                                                    | 🟢     | ✅ Done        | Copilot      |                                     |
-| BLK-4  | Blocks            | `store-locator.js` L167 — `setTimeout(200)` race condition waiting for Leaflet                                                | 🟡     | ⬜ Not Started |              |                                     |
+| BLK-4  | Blocks            | `store-locator.js` L167 — `setTimeout(200)` race condition waiting for Leaflet                                                | 🟡     | ✅ Done        | Copilot      |                                     |
 | BLK-5  | Blocks            | `product-availability.js` — error returns `undefined`, causes silent downstream failure                                       | 🟡     | ⬜ Not Started |              |                                     |
 | TEST-1 | Testing           | No test files exist. `jest` in devDeps but `npm test` is a no-op.                                                             | 🔴     | ⬜ Not Started |              | Minimal: registration + postinstall |
 
