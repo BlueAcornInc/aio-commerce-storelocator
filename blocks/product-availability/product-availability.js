@@ -61,7 +61,11 @@ export default async function decorate(block) {
         return responseData;
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error(
+          "[product-availability] Error fetching inventory:",
+          error
+        );
+        return { items: [] };
       });
     return data;
   };
