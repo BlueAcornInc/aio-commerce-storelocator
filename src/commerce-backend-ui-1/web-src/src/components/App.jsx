@@ -18,8 +18,8 @@ import ExtensionRegistration from "./ExtensionRegistration";
 function App(props) {
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
-  props.runtime.on("configuration", ({ imsOrg, imsToken }) => {
-    console.log("configuration change", { imsOrg, imsToken });
+  props.runtime.on("configuration", ({ imsOrg }) => {
+    console.log("configuration change", { imsOrg });
   });
   // respond to history change events
   props.runtime.on("history", ({ type, path }) => {

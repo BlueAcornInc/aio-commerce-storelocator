@@ -47,7 +47,7 @@ These were not in the reviewer's feedback but are submission guideline violation
 
 | ID     | Category          | Summary                                                                                                                       | Effort | Status         | Who Resolved | Notes                               |
 | ------ | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | ----------------------------------- |
-| SEC-2  | Security          | `App.jsx` L25 logs `{ imsOrg, imsToken }` — **leaks bearer token to browser console**. `index.js` L63 logs full `imsProfile`. | 🟢     | ⬜ Not Started |              |                                     |
+| SEC-2  | Security          | `App.jsx` L25 logs `{ imsOrg, imsToken }` — **leaks bearer token to browser console**. `index.js` L63 logs full `imsProfile`. | 🟢     | ✅ Done        | Copilot      |                                     |
 | SEC-3  | Security          | Private key + cert in `dist/dev-keys/` — may be git-tracked                                                                   | 🟢     | ⬜ Not Started |              | `git rm -r --cached dist/`          |
 | PROJ-1 | Project Structure | `env.dist` is empty (`# no variables are required`) — guidelines require all keys documented                                  | 🟢     | ⬜ Not Started |              |                                     |
 | PROJ-2 | Project Structure | `final: false` on registration action — docs say `final: true`                                                                | 🟢     | ⬜ Not Started |              |                                     |
