@@ -149,7 +149,7 @@ export default async function decorate(block) {
           if (item === "phone") {
             elContainer.appendChild(svg);
             el = document.createElement("a");
-            el.href = `tel:${item}`;
+            el.href = `tel:${store[item]}`;
           } else {
             el = document.createElement("div");
           }
