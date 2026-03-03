@@ -30,14 +30,14 @@ These items come directly from the Adobe review (Ryan Cohen, Maria Kovdrysh — 
 
 Recommended by reviewers. Not blockers but strengthen the resubmission.
 
-| ID    | Category      | Summary                                                                                                                 | Effort | Status         | Who Resolved | Notes                 |
-| ----- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | --------------------- |
-| NTH-1 | Code Review   | Extension ID mismatch — `extension-manifest.json` uses `StoreLocator`, `ExtensionRegistration.jsx` uses `store-locator` | 🟢     | ⬜ Not Started |              | Create `Constants.js` |
-| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ⬜ Not Started |              |                       |
-| NTH-3 | Documentation | `npm install @blueacornici/storefront-storelocator` doesn't work (only `@beta` works)                                   | 🟢     | ⬜ Not Started |              |                       |
-| NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                       |
-| NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                       |
-| NTH-6 | Dependencies  | Unused deps — run `npx npm-check`, look for `NOTUSED?` (e.g., `oauth-1.0a`)                                             | 🟢     | ⬜ Not Started |              |                       |
+| ID    | Category      | Summary                                                                                                                 | Effort | Status         | Who Resolved | Notes               |
+| ----- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | ------------------- |
+| NTH-1 | Code Review   | Extension ID mismatch — `extension-manifest.json` uses `StoreLocator`, `ExtensionRegistration.jsx` uses `store-locator` | 🟢     | ✅ Done        | Copilot      | Aligned to manifest |
+| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ⬜ Not Started |              |                     |
+| NTH-3 | Documentation | `npm install @blueacornici/storefront-storelocator` doesn't work (only `@beta` works)                                   | 🟢     | ⬜ Not Started |              |                     |
+| NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                     |
+| NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                     |
+| NTH-6 | Dependencies  | Unused deps — run `npx npm-check`, look for `NOTUSED?` (e.g., `oauth-1.0a`)                                             | 🟢     | ⬜ Not Started |              |                     |
 
 ---
 

@@ -24,7 +24,7 @@ export default function ExtensionRegistration(props) {
 }
 
 const init = async () => {
-  const extensionId = "store-locator";
+  const extensionId = "StoreLocator";
 
   await register({
     id: extensionId,
