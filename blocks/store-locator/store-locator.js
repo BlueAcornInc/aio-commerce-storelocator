@@ -184,6 +184,12 @@ export default async function decorate(block) {
   };
 
   const response = await fetch("/store-locator/stores.json");
+  if (!response.ok) {
+    console.error(
+      `[store-locator] Failed to load stores.json: ${response.status} ${response.statusText}`
+    );
+    return;
+  }
   const stores = await response.json();
   const parentBlock = document.querySelector(".store-locator-container");
 
