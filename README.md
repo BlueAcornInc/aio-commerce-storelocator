@@ -44,12 +44,12 @@ It integrates Leaflet.js to display store locations and enables filtering by ZIP
 
 ## Local Setup
 
-This guide will walk a merchant or a developer through how to set up this project with an Adobe Commerce SaaS Workspace. It assumes you have nothing but the following entitlements from Adobe:
+This guide will walk a merchant or a developer through how to set up this project with Adobe Commerce. It assumes you have nothing but the following entitlements from Adobe:
 
 ### Pre-Reqs
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
-- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.7 or higher.
+- **Adobe Commerce:** Version 2.4.7 or higher.
 - **Adobe I/O CLI and plugins:** For deploying App Builder actions.
   - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
   - Plugins:
@@ -136,6 +136,8 @@ This will allow the app to fetch commerce data in future updates.
 
 This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured.
 
+> **PaaS & On-Prem Only:** The following steps (IMS configuration, Admin UI SDK composer install) apply to PaaS and On-Premise deployments. SaaS instances have these pre-configured.
+
 #### Setting up IMS
 
 Behind the scenes, there is an app repository this gets registered with. It is exposed through IMS, so be sure to have your instances configured with IMS and in the same organization as your users and apps.
@@ -160,7 +162,7 @@ Once setup, click **Refresh Registrations** to bring in the app. This will expos
 
 # Configuration
 
-Store Locator leverages native Adobe Commerce SaaS Sources and Inventory to provide store locations and product availablity.
+Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
 
 ## Sources
 

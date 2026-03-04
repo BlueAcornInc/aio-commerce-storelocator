@@ -95,7 +95,7 @@ Once installed, the Store Locator block can be used in your Adobe Commerce Store
 
 ## Configuration
 
-Store Locator leverages native Adobe Commerce SaaS Sources and Inventory to provide store locations and product availability. You'll need to configure:
+Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability. You'll need to configure:
 
 1. **Sources** - Set up store locations in Adobe Commerce Admin under Stores > Inventory > Sources
 2. **Inventory** - Assign product inventory to your sources through Catalog > Products
