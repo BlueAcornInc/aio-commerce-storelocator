@@ -65,11 +65,18 @@ These were not in the reviewer's feedback but are submission guideline violation
 
 ## Progress Summary
 
-| Section      | Total  | Done  | Remaining |
-| ------------ | ------ | ----- | --------- |
-| Must Do      | 12     | 2     | 10        |
-| Nice to Have | 6      | 0     | 6         |
-| Additional   | 13     | 0     | 13        |
-| **Total**    | **31** | **2** | **29**    |
+| Section      | Total  | Done   | Remaining |
+| ------------ | ------ | ------ | --------- |
+| Must Do      | 12     | 10     | 2         |
+| Nice to Have | 6      | 4      | 2         |
+| Additional   | 13     | 12     | 1         |
+| **Total**    | **31** | **26** | **5**     |
 
-**Last Updated:** March 3, 2026
+**Remaining items:**
+- **DOC-5** 🟡 — Add da.live steps for block setup (needs domain expertise)
+- **CR-1** 🔴 — Inventory proxy action to remove public token (separate epic)
+- **NTH-4** 🟡 — Fix lint script errors
+- **NTH-5** 🟡 — Outdated deps (major version bumps)
+- **TEST-1** 🔴 — Add minimal test coverage
+
+**Last Updated:** March 4, 2026
