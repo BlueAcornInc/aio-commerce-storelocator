@@ -18,13 +18,9 @@ This npm package provides a Store Locator block that can be easily installed int
 
 To install the Store Locator blocks in your Adobe Commerce Storefront project:
 
-**For stable releases (Recommended):**
+**For stable releases:**
 
-```bash
-npm install @blueacornici/storefront-storelocator
-```
-
-**For beta/testing versions:**
+> **Note:** The stable tag (`@latest`) is not yet published to the npmjs registry. Use the `@beta` tag until the stable release is available.
 
 ```bash
 npm install @blueacornici/storefront-storelocator@beta
