@@ -84,6 +84,8 @@ For Adobe Commerce Cloud and on-premise installation, you will need to install A
 
 If you are in this repo and want to deploy this app, use `aio app use` to point to the right App Builder workspace. You can use the following sequence to set this up. You may also login to Adobe Developer App Builder Console, navigate to the project and workspace, and download a `workspace.json` that can also configure this project.
 
+> **Note:** Be sure to run `npm install` before deploying to ensure all dependencies are installed.
+
 ```bash
 aio login
 aio console org select
