@@ -33,7 +33,7 @@ Recommended by reviewers. Not blockers but strengthen the resubmission.
 | ID    | Category      | Summary                                                                                                                 | Effort | Status         | Who Resolved | Notes               |
 | ----- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | ------------------- |
 | NTH-1 | Code Review   | Extension ID mismatch — `extension-manifest.json` uses `StoreLocator`, `ExtensionRegistration.jsx` uses `store-locator` | 🟢     | ✅ Done        | Copilot      | Aligned to manifest |
-| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ⬜ Not Started |              |                     |
+| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ✅ Done        | Copilot      | Now points to README    |
 | NTH-3 | Documentation | `npm install @blueacornici/storefront-storelocator` doesn't work (only `@beta` works)                                   | 🟢     | ✅ Done        | Copilot      | Defaults to @beta now  |
 | NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                     |
 | NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                     |
