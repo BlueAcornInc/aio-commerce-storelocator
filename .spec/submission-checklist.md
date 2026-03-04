@@ -37,7 +37,7 @@ Recommended by reviewers. Not blockers but strengthen the resubmission.
 | NTH-3 | Documentation | `npm install @blueacornici/storefront-storelocator` doesn't work (only `@beta` works)                                   | 🟢     | ⬜ Not Started |              |                     |
 | NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                     |
 | NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                     |
-| NTH-6 | Dependencies  | Unused deps — run `npx npm-check`, look for `NOTUSED?` (e.g., `oauth-1.0a`)                                             | 🟢     | ⬜ Not Started |              |                     |
+| NTH-6 | Dependencies  | Unused deps — run `npx npm-check`, look for `NOTUSED?` (e.g., `oauth-1.0a`)                                             | 🟢     | ✅ Done        | Copilot      | Removed 3, moved husky |
 
 ---
 
