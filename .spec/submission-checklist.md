@@ -22,7 +22,7 @@ These items come directly from the Adobe review (Ryan Cohen, Maria Kovdrysh — 
 | CFG-2  | Configuration | Add `author` field to `package.json`                                                                                                                                        | 🟢     | ✅ Done        | (post-submission) | Already fixed in current code          |
 | CFG-3  | Configuration | Clean up `deploy.yaml` — remove unused mesh config, commerce-eventing, hardcoded stage URL                                                                                  | 🟢     | ✅ Done        | Copilot           | File in dist/ (gitignored), not in VCS |
 | FUNC-1 | Functionality | Support tab links don't open in Admin UI SDK iframe — GitHub links blocked by X-Frame-Options                                                                               | 🟡     | ✅ Done        | Copilot           | Added sandbox on page config           |
-| DEP-1  | Dependencies  | `npm audit` reports high/critical vulnerabilities — upgrade deps                                                                                                            | 🟡     | ⬜ Not Started |                   |                                        |
+| DEP-1  | Dependencies  | `npm audit` reports high/critical vulnerabilities — upgrade deps                                                                                                            | 🟡     | ✅ Done        | Copilot           | 88→46; remaining in Adobe CLI deps     |
 
 ---
 
