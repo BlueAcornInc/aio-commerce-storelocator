@@ -22,8 +22,10 @@
   "private": true,
   "dependencies": {
     "@adobe/aio-cli": "^10.3.4",
+    "@adobe/aio-commerce-lib-api": "^0.6.1",
     "@adobe/aio-commerce-lib-app": "^0.3.2",
     "@adobe/aio-commerce-lib-config": "^0.13.2",
+    "@adobe/aio-commerce-sdk": "^0.7.3",
     "@adobe/aio-sdk": "^6.0.0",
     "@adobe/exc-app": "^1.4.17",
     "@adobe/react-spectrum": "^3.43.0",

@@ -60,7 +60,7 @@ This guide will walk a merchant or a developer through how to set up this projec
   ```
 
 - **Adobe Commerce Modules (PaaS and On-Prem only)**:
-  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.0.0)
+  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.3.0)
   - Storefront extension module (adobe-commerce/storefront-compatibility)
   - IMS module (adobe-commerce/adobe-ims-metapackage)
 
@@ -148,10 +148,10 @@ Behind the scenes, there is an app repository this gets registered with. It is e
 
 #### Setting up Admin UI SDK
 
-Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
+Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.3.0` or higher:
 
 ```bash
-composer require "magento/commerce-backend-sdk": ">=3.0"
+composer require "magento/commerce-backend-sdk": ">=3.3"
 ```
 
 Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
@@ -178,20 +178,21 @@ App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > A
 
 The following fields are configurable via App Management:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `restApiBaseUrl` | URL | Your Commerce REST API base URL (e.g., `https://commerce.example.com`) |
-| `authType` | List | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS) |
-| `consumerKey` | Password | Commerce integration consumer key (OAuth only) |
-| `consumerSecret` | Password | Commerce integration consumer secret (OAuth only) |
-| `accessToken` | Password | Commerce integration access token (OAuth only) |
-| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only) |
-| `imsClientId` | Password | Adobe IMS client ID (SaaS only) |
-| `imsClientSecret` | Password | Adobe IMS client secret (SaaS only) |
+| Field               | Type     | Description                                                            |
+| ------------------- | -------- | ---------------------------------------------------------------------- |
+| `restApiBaseUrl`    | URL      | Your Commerce REST API base URL (e.g., `https://commerce.example.com`) |
+| `authType`          | List     | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS)            |
+| `consumerKey`       | Password | Commerce integration consumer key (OAuth only)                         |
+| `consumerSecret`    | Password | Commerce integration consumer secret (OAuth only)                      |
+| `accessToken`       | Password | Commerce integration access token (OAuth only)                         |
+| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only)                  |
+| `imsClientId`       | Password | Adobe IMS client ID (SaaS only)                                        |
+| `imsClientSecret`   | Password | Adobe IMS client secret (SaaS only)                                    |
 
 ### Setup Instructions
 
 1. **Deploy the app first:**
+
    ```bash
    aio app deploy
    ```
