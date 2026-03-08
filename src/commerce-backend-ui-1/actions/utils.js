@@ -13,22 +13,19 @@ governing permissions and limitations under the License.
 /* This file exposes some common utilities for your actions */
 
 /**
- *
  * Returns a log ready string of the action input parameters.
  * The `Authorization` header content will be replaced by '<hidden>'.
  *
- * @param {object} params action input parameters.
- *
- * @returns {string}
- *
+ * @param {object} params - Action input parameters.
+ * @returns {string} JSON string representation of parameters with hidden authorization.
  */
-function stringParameters (params) {
+function stringParameters(params) {
   // hide authorization token without overriding params
-  let headers = params.__ow_headers || {}
+  let headers = params.__ow_headers || {};
   if (headers.authorization) {
-    headers = { ...headers, authorization: '<hidden>' }
+    headers = { ...headers, authorization: "<hidden>" };
   }
-  return JSON.stringify({ ...params, __ow_headers: headers })
+  return JSON.stringify({ ...params, __ow_headers: headers });
 }
 
 /**
@@ -44,52 +41,59 @@ function stringParameters (params) {
  * @returns {array}
  * @private
  */
-function getMissingKeys (obj, required) {
-  return required.filter(r => {
-    const splits = r.split('.')
-    const last = splits[splits.length - 1]
-    const traverse = splits.slice(0, -1).reduce((tObj, split) => { tObj = (tObj[split] || {}); return tObj }, obj)
-    return traverse[last] === undefined || traverse[last] === '' // missing default params are empty string
-  })
+function getMissingKeys(obj, required) {
+  return required.filter((r) => {
+    const splits = r.split(".");
+    const last = splits[splits.length - 1];
+    const traverse = splits.slice(0, -1).reduce((tObj, split) => {
+      tObj = tObj[split] || {};
+      return tObj;
+    }, obj);
+    return traverse[last] === undefined || traverse[last] === ""; // missing default params are empty string
+  });
 }
 
 /**
- *
  * Returns the list of missing keys giving an object and its required keys.
  * A parameter is missing if its value is undefined or ''.
  * A value of 0 or null is not considered as missing.
  *
- * @param {object} params action input parameters.
- * @param {array} requiredHeaders list of required input headers.
- * @param {array} requiredParams list of required input parameters.
+ * @param {object} params - Action input parameters.
+ * @param {Array} requiredParams - List of required input parameters.
  *        Each element can be multi level deep using a '.' separator e.g. 'myRequiredObj.myRequiredKey'.
- *
- * @returns {string} if the return value is not null, then it holds an error message describing the missing inputs.
- *
+ * @param {Array} requiredHeaders - List of required input headers.
+ * @returns {string} If the return value is not null, then it holds an error message describing the missing inputs.
  */
-function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders = []) {
-  let errorMessage = null
+function checkMissingRequestInputs(
+  params,
+  requiredParams = [],
+  requiredHeaders = []
+) {
+  let errorMessage = null;
 
   // input headers are always lowercase
-  requiredHeaders = requiredHeaders.map(h => h.toLowerCase())
+  requiredHeaders = requiredHeaders.map((h) => h.toLowerCase());
   // check for missing headers
-  const missingHeaders = getMissingKeys(params.__ow_headers || {}, requiredHeaders)
+  const missingHeaders = getMissingKeys(
+    params.__ow_headers || {},
+    requiredHeaders
+  );
   if (missingHeaders.length > 0) {
-    errorMessage = `missing header(s) '${missingHeaders}'`
+    errorMessage = `missing header(s) '${missingHeaders}'`;
   }
 
   // check for missing parameters
-  const missingParams = getMissingKeys(params, requiredParams)
+  const missingParams = getMissingKeys(params, requiredParams);
   if (missingParams.length > 0) {
     if (errorMessage) {
-      errorMessage += ' and '
+      errorMessage += " and ";
     } else {
-      errorMessage = ''
+      errorMessage = "";
     }
-    errorMessage += `missing parameter(s) '${missingParams}'`
+    errorMessage += `missing parameter(s) '${missingParams}'`;
   }
 
-  return errorMessage
+  return errorMessage;
 }
 
 /**
@@ -97,17 +101,17 @@ function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders
  * Extracts the bearer token string from the Authorization header in the request parameters.
  *
  * @param {object} params action input parameters.
- *
  * @returns {string|undefined} the token string or undefined if not set in request headers.
- *
  */
-function getBearerToken (params) {
-  if (params.__ow_headers &&
-      params.__ow_headers.authorization &&
-      params.__ow_headers.authorization.startsWith('Bearer ')) {
-    return params.__ow_headers.authorization.substring('Bearer '.length)
+function getBearerToken(params) {
+  if (
+    params.__ow_headers &&
+    params.__ow_headers.authorization &&
+    params.__ow_headers.authorization.startsWith("Bearer ")
+  ) {
+    return params.__ow_headers.authorization.substring("Bearer ".length);
   }
-  return undefined
+  return undefined;
 }
 /**
  *
@@ -119,27 +123,25 @@ function getBearerToken (params) {
  *        e.g. 'missing xyz parameter'
  * @param {*} [logger] an optional logger instance object with an `info` method
  *        e.g. `new require('@adobe/aio-sdk').Core.Logger('name')`
- *
  * @returns {object} the error object, ready to be returned from the action main's function.
- *
  */
-function errorResponse (statusCode, message, logger) {
-  if (logger && typeof logger.info === 'function') {
-    logger.info(`${statusCode}: ${message}`)
+function errorResponse(statusCode, message, logger) {
+  if (logger && typeof logger.info === "function") {
+    logger.info(`${statusCode}: ${message}`);
   }
   return {
     error: {
       statusCode,
       body: {
-        error: message
-      }
-    }
-  }
+        error: message,
+      },
+    },
+  };
 }
 
 module.exports = {
   errorResponse,
   getBearerToken,
   stringParameters,
-  checkMissingRequestInputs
-}
+  checkMissingRequestInputs,
+};

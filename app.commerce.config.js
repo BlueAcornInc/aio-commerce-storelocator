@@ -12,15 +12,15 @@
 
 /**
  * App Management Configuration Schema
- * 
+ *
  * This file defines the configuration schema for Store Locator app using
  * Adobe Commerce App Management. Merchants configure these values via
  * Commerce Admin (Apps > App Management).
- * 
+ *
  * Security: All sensitive credentials are stored securely in App Builder
  * and retrieved server-side via getConfigurationByKey() - never exposed
  * in public storefront code.
- * 
+ *
  * @see https://developer.adobe.com/commerce/extensibility/app-management/
  */
 const { defineConfig } = require("@adobe/aio-commerce-lib-app/config");
@@ -29,8 +29,9 @@ module.exports = defineConfig({
   metadata: {
     id: "store-locator",
     displayName: "Store Locator",
-    description: "Provides store locator functionality with interactive maps and product availability",
-    version: "1.0.5"
+    description:
+      "Provides store locator functionality with interactive maps and product availability",
+    version: "1.0.5",
   },
   businessConfig: {
     schema: [
@@ -38,8 +39,9 @@ module.exports = defineConfig({
         name: "restApiBaseUrl",
         type: "url",
         label: "Commerce REST API Base URL",
-        description: "The base URL for your Adobe Commerce REST API (e.g., https://commerce.example.com)",
-        required: true
+        description:
+          "The base URL for your Adobe Commerce REST API (e.g., https://commerce.example.com)",
+        required: true,
       },
       {
         name: "authType",
@@ -49,52 +51,54 @@ module.exports = defineConfig({
         selectionMode: "single",
         options: [
           { label: "PaaS/On-Premise (OAuth 1.0a)", value: "oauth" },
-          { label: "SaaS (IMS)", value: "ims" }
+          { label: "SaaS (IMS)", value: "ims" },
         ],
-        default: "oauth"
+        default: "oauth",
       },
       {
         name: "consumerKey",
         type: "password",
         label: "Consumer Key",
-        description: "Commerce integration consumer key (for OAuth 1.0a - PaaS/On-Premise)",
-        requiredIf: { field: "authType", value: "oauth" }
+        description:
+          "Commerce integration consumer key (for OAuth 1.0a - PaaS/On-Premise)",
+        requiredIf: { field: "authType", value: "oauth" },
       },
       {
         name: "consumerSecret",
         type: "password",
         label: "Consumer Secret",
-        description: "Commerce integration consumer secret (for OAuth 1.0a - PaaS/On-Premise)",
-        requiredIf: { field: "authType", value: "oauth" }
+        description:
+          "Commerce integration consumer secret (for OAuth 1.0a - PaaS/On-Premise)",
+        requiredIf: { field: "authType", value: "oauth" },
       },
       {
         name: "accessToken",
         type: "password",
         label: "Access Token",
         description: "Commerce integration access token",
-        requiredIf: { field: "authType", value: "oauth" }
+        requiredIf: { field: "authType", value: "oauth" },
       },
       {
         name: "accessTokenSecret",
         type: "password",
         label: "Access Token Secret",
         description: "Commerce integration access token secret",
-        requiredIf: { field: "authType", value: "oauth" }
+        requiredIf: { field: "authType", value: "oauth" },
       },
       {
         name: "imsClientId",
         type: "password",
         label: "IMS Client ID",
         description: "Adobe IMS client ID (for SaaS authentication)",
-        requiredIf: { field: "authType", value: "ims" }
+        requiredIf: { field: "authType", value: "ims" },
       },
       {
         name: "imsClientSecret",
         type: "password",
         label: "IMS Client Secret",
         description: "Adobe IMS client secret (for SaaS authentication)",
-        requiredIf: { field: "authType", value: "ims" }
-      }
-    ]
-  }
+        requiredIf: { field: "authType", value: "ims" },
+      },
+    ],
+  },
 });

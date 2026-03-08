@@ -30,13 +30,13 @@ These items come directly from the Adobe review (Ryan Cohen, Maria Kovdrysh — 
 
 Recommended by reviewers. Not blockers but strengthen the resubmission.
 
-| ID    | Category      | Summary                                                                                                                 | Effort | Status         | Who Resolved | Notes               |
-| ----- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | ------------------- |
-| NTH-1 | Code Review   | Extension ID mismatch — `extension-manifest.json` uses `StoreLocator`, `ExtensionRegistration.jsx` uses `store-locator` | 🟢     | ✅ Done        | Copilot      | Aligned to manifest |
-| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ✅ Done        | Copilot      | Now points to README    |
+| ID    | Category      | Summary                                                                                                                 | Effort | Status         | Who Resolved | Notes                  |
+| ----- | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ------------ | ---------------------- |
+| NTH-1 | Code Review   | Extension ID mismatch — `extension-manifest.json` uses `StoreLocator`, `ExtensionRegistration.jsx` uses `store-locator` | 🟢     | ✅ Done        | Copilot      | Aligned to manifest    |
+| NTH-2 | Documentation | `EDS.md` duplicates `README.md` content — consolidate                                                                   | 🟢     | ✅ Done        | Copilot      | Now points to README   |
 | NTH-3 | Documentation | `npm install @blueacornici/storefront-storelocator` doesn't work (only `@beta` works)                                   | 🟢     | ✅ Done        | Copilot      | Defaults to @beta now  |
-| NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                     |
-| NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                     |
+| NTH-4 | Script Mgmt   | Lint scripts in `package.json` return errors when run                                                                   | 🟡     | ⬜ Not Started |              |                        |
+| NTH-5 | Dependencies  | Outdated deps — run `npx npm-check`, look for `MAJOR UP`                                                                | 🟡     | ⬜ Not Started |              |                        |
 | NTH-6 | Dependencies  | Unused deps — run `npx npm-check`, look for `NOTUSED?` (e.g., `oauth-1.0a`)                                             | 🟢     | ✅ Done        | Copilot      | Removed 3, moved husky |
 
 ---
@@ -73,6 +73,7 @@ These were not in the reviewer's feedback but are submission guideline violation
 | **Total**    | **31** | **26** | **5**     |
 
 **Remaining items:**
+
 - **DOC-5** 🟡 — Add da.live steps for block setup (needs domain expertise)
 - **CR-1** 🔴 — Inventory proxy action to remove public token (separate epic)
 - **NTH-4** 🟡 — Fix lint script errors

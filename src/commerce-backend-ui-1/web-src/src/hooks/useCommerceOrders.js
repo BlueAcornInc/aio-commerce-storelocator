@@ -9,25 +9,27 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { useEffect, useState } from 'react'
-import { callAction } from '../utils'
+import { useEffect, useState } from "react";
+import { callAction } from "../utils";
 
-export const useCommerceOrders = props => {
-    const [isLoadingCommerceOrders, setIsLoadingCommerceOrders] = useState(true)
-    const [commerceOrders, setCommerceOrders] = useState([])
+export const useCommerceOrders = (props) => {
+  const [isLoadingCommerceOrders, setIsLoadingCommerceOrders] = useState(true);
+  const [commerceOrders, setCommerceOrders] = useState([]);
 
-    const fetchCommerceOrders = async () => {
-        const commerceOrdersResponse = await callAction(
-            props,
-            'CustomMenu/commerce-rest-get',
-            'orders?searchCriteria=all'
-        )
-        setCommerceOrders(commerceOrdersResponse.error ? [] : commerceOrdersResponse.items)
-    }
+  const fetchCommerceOrders = async () => {
+    const commerceOrdersResponse = await callAction(
+      props,
+      "CustomMenu/commerce-rest-get",
+      "orders?searchCriteria=all"
+    );
+    setCommerceOrders(
+      commerceOrdersResponse.error ? [] : commerceOrdersResponse.items
+    );
+  };
 
-    useEffect(() => {
-        fetchCommerceOrders().then(() => setIsLoadingCommerceOrders(false))
-    }, [])
+  useEffect(() => {
+    fetchCommerceOrders().then(() => setIsLoadingCommerceOrders(false));
+  }, []);
 
-    return { isLoadingCommerceOrders, commerceOrders }
-}
+  return { isLoadingCommerceOrders, commerceOrders };
+};

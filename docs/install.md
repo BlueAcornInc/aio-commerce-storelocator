@@ -10,10 +10,10 @@ This guide will walk a merchant or a developer through how to set up this projec
 
 ## Pre-Reqs
 
-* Adobe Developer App Builder 
-* Access to a working Adobe Commerce instance (Cloud, SaaS, or On-Premise)
-* Local evironment running linux or compatible (i.e. MacOS or Windows with WCL2)
-    * This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman
+- Adobe Developer App Builder
+- Access to a working Adobe Commerce instance (Cloud, SaaS, or On-Premise)
+- Local evironment running linux or compatible (i.e. MacOS or Windows with WCL2)
+  - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman
 
 ## Setup Commerce and Storefront
 
@@ -22,7 +22,7 @@ If you haven't already, we need to prepare the project and workspaces within our
 `aio commerce init` will create a few repos for you in github, so you must be authenticated with github. the `gh` tool can help with this.
 
 ```bash
-$ gh auth login 
+$ gh auth login
 $ aio commerce init
 ```
 
@@ -31,25 +31,23 @@ $ aio commerce init
 - This step allows your App Builder application to authenticate and communicate with your Adobe Commerce backend.
 
 - In the Adobe Commerce Admin panel:
+  - Navigate to:  
+    `System > Extensions > Integrations`
+    - Click **Add New Integration**
 
-   - Navigate to:  
-     `System > Extensions > Integrations`
+    - Fill in the following values:
+      - **Name**: e.g. `Store Locator App Builder Integration`
+      - Leave other fields blank unless required by your organization
 
-     - Click **Add New Integration**
+    - Under the **API** tab, click **Select All** to grant all permissions, or configure scopes as needed
 
-     - Fill in the following values:
-        - **Name**: e.g. `Store Locator App Builder Integration`
-        - Leave other fields blank unless required by your organization
+    - Save the integration and then **activate** it
 
-     - Under the **API** tab, click **Select All** to grant all permissions, or configure scopes as needed
-
-     - Save the integration and then **activate** it
-
-     - You will be shown the following credentials:
-        - **Consumer Key**
-        - **Consumer Secret**
-        - **Access Token**
-        - **Access Token Secret**
+    - You will be shown the following credentials:
+      - **Consumer Key**
+      - **Consumer Secret**
+      - **Access Token**
+      - **Access Token Secret**
 
 - Remove the commented out Option 1 fields and update these to your `.env` file:
 
@@ -64,13 +62,13 @@ This will allow the app to fetch commerce data in future updates.
 
 ## Register App to Commerce Instance
 
-This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured. 
+This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured.
 
 ### Setting up IMS
 
 Behind the scenes, there is an app repository this gets registered with. It is exposed through IMS, so be sure to have your instances configured with IMS and in the same organization as your users and apps.
 
-* [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
+- [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
 
 ### Setting up Admin UI SDK
 
@@ -80,5 +78,4 @@ Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit 
 
 ![Running Admin UI SDK Locally](img/admin-ui-sdk-setup.png)
 
-Once setup, click __Refresh Registrations__ to bring in the app. This will expose the App in the _Apps_ section of the Main Admin Menu.
-
+Once setup, click **Refresh Registrations** to bring in the app. This will expose the App in the _Apps_ section of the Main Admin Menu.

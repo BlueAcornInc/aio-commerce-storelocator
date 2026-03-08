@@ -22,13 +22,14 @@ The `product-availability` EDS block currently requires a Commerce REST API toke
 ## Current State
 
 `blocks/product-availability/product-availability.js` lines 36-48:
+
 ```js
 const configData = await getConfigFromSession();
 // configData.restApiBaseUrl and configData.restApiToken come from public config.json
 const options = {
-  headers: { Authorization: `Bearer ${configData.restApiToken}` }
+  headers: { Authorization: `Bearer ${configData.restApiToken}` },
 };
-fetch(`${configData.restApiBaseUrl}/inventory/source-items?...`, options)
+fetch(`${configData.restApiBaseUrl}/inventory/source-items?...`, options);
 ```
 
 The `restApiBaseUrl` and `restApiToken` values are stored in the storefront's `config.json` which is publicly accessible — anyone can extract the Commerce API token.
@@ -64,9 +65,11 @@ The block calls the proxy action URL (configured in `config.json`). The proxy au
 ## Subtasks
 
 ### 1. Create Inventory Proxy Action
+
 **Estimate:** 5-8 hours
 
 Create `src/commerce-backend-ui-1/actions/inventory-proxy/index.js`:
+
 - Accept `sku` and optional `sourceCode` as query parameters
 - Determine auth type from environment config (IMS vs OAuth)
 - Authenticate to Commerce REST API server-side
@@ -75,6 +78,7 @@ Create `src/commerce-backend-ui-1/actions/inventory-proxy/index.js`:
 - Handle errors (auth failure, Commerce unavailable, invalid SKU)
 
 **Existing code to leverage:**
+
 - `actions/oauth1a.js` — OAuth 1.0a client helper (already tracked)
 - `actions/commerce/index.js` — Commerce API client (already tracked)
 - `actions/utils.js` — Shared utilities (already tracked)
@@ -82,13 +86,15 @@ Create `src/commerce-backend-ui-1/actions/inventory-proxy/index.js`:
 **Reference:** [Starter Kit Auth Types](https://github.com/adobe/commerce-integration-starter-kit?tab=readme-ov-file#supported-auth-types)
 
 ### 2. Configure Action in ext.config.yaml
+
 **Estimate:** 1-2 hours
 
 Add the inventory-proxy action to `src/commerce-backend-ui-1/ext.config.yaml`:
+
 ```yaml
 inventory-proxy:
   function: actions/inventory-proxy/index.js
-  web: 'yes'
+  web: "yes"
   runtime: nodejs:20
   inputs:
     LOG_LEVEL: $LOG_LEVEL
@@ -103,19 +109,23 @@ inventory-proxy:
 ```
 
 Decide on auth model:
+
 - `require-adobe-auth: true` → requires IMS token from caller (more secure, SaaS-friendly)
 - `require-adobe-auth: false` → public action (simpler for EDS blocks, needs rate limiting)
 
 ### 3. Update product-availability Block
+
 **Estimate:** 2-3 hours
 
 Modify `blocks/product-availability/product-availability.js`:
+
 - Read proxy action URL from `config.json` (e.g., `inventoryProxyUrl`)
 - Remove `restApiBaseUrl` and `restApiToken` from config usage
 - Call the proxy action instead of Commerce REST API directly
 - Handle proxy-specific errors (action timeout, rate limit)
 
 ### 4. Update env.dist and Documentation
+
 **Estimate:** 2-3 hours
 
 - Add all credential keys to `env.dist` with comments explaining PaaS vs SaaS differences
@@ -124,6 +134,7 @@ Modify `blocks/product-availability/product-availability.js`:
 - Remove any references to storing Commerce tokens in `config.json`
 
 ### 5. Unit Tests
+
 **Estimate:** 3-5 hours
 
 - Test proxy action with mocked Commerce API responses
@@ -136,16 +147,16 @@ Modify `blocks/product-availability/product-availability.js`:
 
 ## Files to Touch
 
-| File | Change |
-|------|--------|
-| **New:** `src/.../actions/inventory-proxy/index.js` | Proxy action |
-| `src/.../ext.config.yaml` | Register action + credential inputs |
-| `blocks/product-availability/product-availability.js` | Call proxy instead of Commerce |
-| `env.dist` | Add credential keys |
-| `README.md` | Document PaaS/SaaS credential setup |
-| `blocks/README.md` | Update config section |
-| **New:** `test/inventory-proxy.test.js` | Unit tests |
-| `.spec/submission-checklist.md` | Mark CR-1 done |
+| File                                                  | Change                              |
+| ----------------------------------------------------- | ----------------------------------- |
+| **New:** `src/.../actions/inventory-proxy/index.js`   | Proxy action                        |
+| `src/.../ext.config.yaml`                             | Register action + credential inputs |
+| `blocks/product-availability/product-availability.js` | Call proxy instead of Commerce      |
+| `env.dist`                                            | Add credential keys                 |
+| `README.md`                                           | Document PaaS/SaaS credential setup |
+| `blocks/README.md`                                    | Update config section               |
+| **New:** `test/inventory-proxy.test.js`               | Unit tests                          |
+| `.spec/submission-checklist.md`                       | Mark CR-1 done                      |
 
 ## References
 

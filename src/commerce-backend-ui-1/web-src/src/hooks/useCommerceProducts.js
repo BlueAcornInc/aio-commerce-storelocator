@@ -9,26 +9,29 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { useEffect, useState } from 'react'
-import { callAction } from '../utils'
+import { useEffect, useState } from "react";
+import { callAction } from "../utils";
 
-export const useCommerceProducts = props => {
-    const [isLoadingCommerceProducts, setIsLoadingCommerceProducts] = useState(true)
-    const [commerceProducts, setCommerceProducts] = useState([])
+export const useCommerceProducts = (props) => {
+  const [isLoadingCommerceProducts, setIsLoadingCommerceProducts] =
+    useState(true);
+  const [commerceProducts, setCommerceProducts] = useState([]);
 
-    const fetchCommerceProducts = async () => {
-        const commerceProductsResponse = await callAction(
-            props,
-            'CustomMenu/commerce-rest-get',
-            `products?searchCriteria[pageSize]=${props.pageSize}&searchCriteria[currentPage]=${props.currentPage}`
-        )
-        console.log(commerceProductsResponse)
-        setCommerceProducts(commerceProductsResponse.error ? [] : commerceProductsResponse.items)
-    }
+  const fetchCommerceProducts = async () => {
+    const commerceProductsResponse = await callAction(
+      props,
+      "CustomMenu/commerce-rest-get",
+      `products?searchCriteria[pageSize]=${props.pageSize}&searchCriteria[currentPage]=${props.currentPage}`
+    );
+    console.log(commerceProductsResponse);
+    setCommerceProducts(
+      commerceProductsResponse.error ? [] : commerceProductsResponse.items
+    );
+  };
 
-    useEffect(() => {
-        fetchCommerceProducts().then(() => setIsLoadingCommerceProducts(false))
-    }, [])
+  useEffect(() => {
+    fetchCommerceProducts().then(() => setIsLoadingCommerceProducts(false));
+  }, []);
 
-    return { isLoadingCommerceProducts, commerceProducts }
-}
+  return { isLoadingCommerceProducts, commerceProducts };
+};

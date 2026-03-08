@@ -7,15 +7,14 @@ parent: Store Locator
 
 The store locator has a set of blocks that are used with Adobe Commerce Storefront to show the locator and product availability.
 
-* [Store Locator Block Collection](https://github.com/blueacorninc/aio-commerce-storelocator-blocks)
+- [Store Locator Block Collection](https://github.com/blueacorninc/aio-commerce-storelocator-blocks)
 
 ## Installation
 
 Installation is easy, simply copy in the `store-locator` blocks from our block collection, and reference them in the doc in question.
 
-* [Store Locator Block Collection](https://github.com/blueacorninc/aio-commerce-storelocator-blocks)
-* [Reference Store Locator Block in da.live](https://da.live/edit#/blueacorninc/shop/store-locator)
-
+- [Store Locator Block Collection](https://github.com/blueacorninc/aio-commerce-storelocator-blocks)
+- [Reference Store Locator Block in da.live](https://da.live/edit#/blueacorninc/shop/store-locator)
 
 ### Document-based Authoring
 

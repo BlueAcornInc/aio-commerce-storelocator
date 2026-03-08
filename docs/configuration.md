@@ -4,10 +4,9 @@ layout: page
 parent: Store Locator
 ---
 
-
 # Configuration
 
-Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability. 
+Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
 
 ## Sources
 
@@ -21,5 +20,4 @@ You can find Sources in the Stores menu under Inventory.
 
 ### Configure Invnetory
 
-Once sources are added, you can use can add inventory to the sources through Catalog > Products. 
-
+Once sources are added, you can use can add inventory to the sources through Catalog > Products.

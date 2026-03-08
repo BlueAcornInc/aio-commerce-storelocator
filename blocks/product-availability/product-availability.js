@@ -38,24 +38,29 @@ export default async function decorate(block) {
       return { items: [] };
     }
 
-    const actionUrl = window.__EXC_CONFIG__?.actions?.["inventory-proxy"] || window._myStoreConfig?.inventoryProxyUrl;
+    const actionUrl =
+      window.__EXC_CONFIG__?.actions?.["inventory-proxy"] ||
+      window._myStoreConfig?.inventoryProxyUrl;
     if (!actionUrl) {
-      console.error("[product-availability] Inventory proxy URL not configured");
+      console.error(
+        "[product-availability] Inventory proxy URL not configured"
+      );
       return { items: [] };
     }
 
-    const imsToken = window.__EXC_CONFIG__?.ims?.token || window._myStoreConfig?.imsToken;
+    const imsToken =
+      window.__EXC_CONFIG__?.ims?.token || window._myStoreConfig?.imsToken;
 
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(imsToken && { Authorization: `Bearer ${imsToken}` })
+        ...(imsToken && { Authorization: `Bearer ${imsToken}` }),
       },
       body: JSON.stringify({
         sku: product.sku,
-        sourceCode: myStore?.commerce_warehouse_id
-      })
+        sourceCode: myStore?.commerce_warehouse_id,
+      }),
     };
 
     const data = fetch(actionUrl, options)
