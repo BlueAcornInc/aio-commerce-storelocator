@@ -1,5 +1,4 @@
 import { events } from "@dropins/tools/event-bus.js";
-import { getConfigFromSession } from "../../scripts/commerce.js";
 
 export default async function decorate(block) {
   let warehousesAvailability;
@@ -34,23 +33,32 @@ export default async function decorate(block) {
   };
 
   const getWarehousesAvailability = async () => {
-    const configData = await getConfigFromSession();
-    const config = {
-      baseUrl: `${configData.restApiBaseUrl}/inventory/source-items`,
-      product: events._lastEvent?.["pdp/data"]?.payload ?? null,
-    };
+    const product = events._lastEvent?.["pdp/data"]?.payload ?? null;
+    if (!product?.sku) {
+      return { items: [] };
+    }
+
+    const actionUrl = window.__EXC_CONFIG__?.actions?.["inventory-proxy"] || window._myStoreConfig?.inventoryProxyUrl;
+    if (!actionUrl) {
+      console.error("[product-availability] Inventory proxy URL not configured");
+      return { items: [] };
+    }
+
+    const imsToken = window.__EXC_CONFIG__?.ims?.token || window._myStoreConfig?.imsToken;
+
     const options = {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${configData.restApiToken}`,
+        ...(imsToken && { Authorization: `Bearer ${imsToken}` })
       },
+      body: JSON.stringify({
+        sku: product.sku,
+        sourceCode: myStore?.commerce_warehouse_id
+      })
     };
 
-    const data = fetch(
-      `${config.baseUrl}?searchCriteria[filter_groups][0][filters][0][field]=sku&searchCriteria[filter_groups][0][filters][0][value]=${config.product.sku}&searchCriteria[filter_groups][0][filters][0][condition_type]=eq`,
-      options
-    )
+    const data = fetch(actionUrl, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -72,7 +80,6 @@ export default async function decorate(block) {
   if (myStore) {
     myWarehouseId = myStore.commerce_warehouse_id;
   } else {
-    // no store selected
     productAvailabilityEl.innerText =
       "In-store stock: unknown. No store selected.";
     productAvailabilityEl.classList.remove("hidden");

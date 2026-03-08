@@ -166,6 +166,60 @@ Once setup, click **Refresh Registrations** to bring in the app. This will expos
 
 Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
 
+## App Management Configuration
+
+Store Locator uses **Adobe Commerce App Management** to securely store Commerce API credentials. This replaces the previous approach of storing tokens in public configuration files.
+
+### What is App Management?
+
+App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > App Management) for configuring app settings. Credentials are stored securely in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
+
+### Configuration Fields
+
+The following fields are configurable via App Management:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `restApiBaseUrl` | URL | Your Commerce REST API base URL (e.g., `https://commerce.example.com`) |
+| `authType` | List | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS) |
+| `consumerKey` | Password | Commerce integration consumer key (OAuth only) |
+| `consumerSecret` | Password | Commerce integration consumer secret (OAuth only) |
+| `accessToken` | Password | Commerce integration access token (OAuth only) |
+| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only) |
+| `imsClientId` | Password | Adobe IMS client ID (SaaS only) |
+| `imsClientSecret` | Password | Adobe IMS client secret (SaaS only) |
+
+### Setup Instructions
+
+1. **Deploy the app first:**
+   ```bash
+   aio app deploy
+   ```
+
+2. **Register the app in Commerce Admin:**
+   - Go to **Apps** > **App Management**
+   - Find "Store Locator" and click **Configure**
+   - Fill in your Commerce credentials based on your deployment type:
+
+   **For PaaS/On-Premise:**
+   - Set `authType` to "PaaS/On-Premise (OAuth 1.0a)"
+   - Enter your Integration credentials from Commerce Admin (System > Extensions > Integrations)
+
+   **For SaaS:**
+   - Set `authType` to "SaaS (IMS)"
+   - Enter your IMS client credentials
+
+3. **Refresh registrations:**
+   - Go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK**
+   - Click **Refresh Registrations**
+
+### Security Benefits
+
+- **No exposed tokens:** Credentials never appear in public storefront code
+- **Server-side authentication:** All API calls go through the inventory-proxy action
+- **Automatic token management:** IMS tokens are automatically refreshed; OAuth tokens can be regenerated
+- **Merchant-controlled:** Merchants configure credentials through Admin UI, not by editing code
+
 ## Sources
 
 You can find Sources in the Stores menu under Inventory.
