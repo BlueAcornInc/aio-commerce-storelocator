@@ -17,4 +17,12 @@ runtimeManifest:
             LOG_LEVEL: debug
           annotations:
             require-adobe-auth: true
-            final: false
+            final: true
+        inventory-proxy:
+          function: actions/inventory-proxy/index.js
+          web: "yes"
+          runtime: "nodejs:22"
+          inputs:
+            LOG_LEVEL: debug
+          annotations:
+            require-adobe-auth: true

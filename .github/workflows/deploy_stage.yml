@@ -60,6 +60,7 @@ jobs:
           AIO_PROJECT_ID: ${{ vars.AIO_PROJECT_ID_STAGE }}
           AIO_PROJECT_NAME: ${{ vars.AIO_PROJECT_NAME_STAGE }}
           AIO_PROJECT_ORG_ID: ${{ vars.AIO_PROJECT_ORG_ID_STAGE }}
+          AIO_PROJECT_ORG_IMS__ORG__ID: ${{ vars.IMSORGID_STAGE }}
           AIO_PROJECT_WORKSPACE_ID: ${{ vars.AIO_PROJECT_WORKSPACE_ID_STAGE }}
           AIO_PROJECT_WORKSPACE_NAME: ${{ vars.AIO_PROJECT_WORKSPACE_NAME_STAGE }}
           AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ vars.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_STAGE }}
@@ -67,4 +68,3 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: deploy
-          noPublish: true
