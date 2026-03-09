@@ -14,9 +14,10 @@ export const Welcome = (props) => {
       <Heading level={1}>Configuring the Store Locator</Heading>
       <Content>
         <Text>
-          The store locator leverages Magento's native Multi-Source Inventory
-          (MSI) features, making it straightforward to manage inventory across
-          multiple locations. Setting it up is easy—just follow these steps:
+          The store locator leverages Adobe Commerce's native Multi-Source
+          Inventory (MSI) features, making it straightforward to manage
+          inventory across multiple locations. Setting it up is easy—just follow
+          these steps:
           <br />
           <br />
         </Text>

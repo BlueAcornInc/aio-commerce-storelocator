@@ -18,8 +18,8 @@ import ExtensionRegistration from "./ExtensionRegistration";
 function App(props) {
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
-  props.runtime.on("configuration", ({ imsOrg, imsToken }) => {
-    console.log("configuration change", { imsOrg, imsToken });
+  props.runtime.on("configuration", ({ imsOrg }) => {
+    console.log("configuration change", { imsOrg });
   });
   // respond to history change events
   props.runtime.on("history", ({ type, path }) => {
@@ -49,7 +49,9 @@ function App(props) {
   // Methods
 
   // error handler on UI rendering failure
-  function onError(e, componentStack) {}
+  function onError(e, componentStack) {
+    console.error("[App] Rendering error:", e.message, componentStack);
+  }
 
   // component to show if UI fails rendering
   function fallbackComponent({ componentStack, error }) {

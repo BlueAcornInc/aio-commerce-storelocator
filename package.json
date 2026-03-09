@@ -22,6 +22,10 @@
   "private": true,
   "dependencies": {
     "@adobe/aio-cli": "^10.3.4",
+    "@adobe/aio-commerce-lib-api": "^0.6.1",
+    "@adobe/aio-commerce-lib-app": "^0.3.2",
+    "@adobe/aio-commerce-lib-config": "^0.13.2",
+    "@adobe/aio-commerce-sdk": "^0.7.3",
     "@adobe/aio-sdk": "^6.0.0",
     "@adobe/exc-app": "^1.4.17",
     "@adobe/react-spectrum": "^3.43.0",
@@ -30,11 +34,8 @@
     "@parcel/babel-preset-env": "^2.16.1",
     "@spectrum-icons/workflow": "^4.2.23",
     "core-js": "^3.44.0",
-    "husky": "^9.1.7",
+    "got": "^14.6.6",
     "oauth-1.0a": "^2.2.6",
-    "os-browserify": "^0.3.0",
-    "package-lock.json": "^1.0.0",
-    "package.json": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^3.1.4",
@@ -55,6 +56,7 @@
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.5"
   },
   "scripts": {

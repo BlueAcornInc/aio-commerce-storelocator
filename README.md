@@ -44,12 +44,12 @@ It integrates Leaflet.js to display store locations and enables filtering by ZIP
 
 ## Local Setup
 
-This guide will walk a merchant or a developer through how to set up this project with an Adobe Commerce SaaS Workspace. It assumes you have nothing but the following entitlements from Adobe:
+This guide will walk a merchant or a developer through how to set up this project with Adobe Commerce. It assumes you have nothing but the following entitlements from Adobe:
 
 ### Pre-Reqs
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
-- **Adobe Commerce (Cloud, SaaS or On-Premise):** Version 2.4.7 or higher.
+- **Adobe Commerce:** Version 2.4.7 or higher.
 - **Adobe I/O CLI and plugins:** For deploying App Builder actions.
   - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
   - Plugins:
@@ -60,7 +60,7 @@ This guide will walk a merchant or a developer through how to set up this projec
   ```
 
 - **Adobe Commerce Modules (PaaS and On-Prem only)**:
-  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.0.0)
+  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.3.0)
   - Storefront extension module (adobe-commerce/storefront-compatibility)
   - IMS module (adobe-commerce/adobe-ims-metapackage)
 
@@ -83,6 +83,8 @@ For Adobe Commerce Cloud and on-premise installation, you will need to install A
 ### Deploy The App
 
 If you are in this repo and want to deploy this app, use `aio app use` to point to the right App Builder workspace. You can use the following sequence to set this up. You may also login to Adobe Developer App Builder Console, navigate to the project and workspace, and download a `workspace.json` that can also configure this project.
+
+> **Note:** Be sure to run `npm install` before deploying to ensure all dependencies are installed.
 
 ```bash
 aio login
@@ -136,6 +138,8 @@ This will allow the app to fetch commerce data in future updates.
 
 This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured.
 
+> **PaaS & On-Prem Only:** The following steps (IMS configuration, Admin UI SDK composer install) apply to PaaS and On-Premise deployments. SaaS instances have these pre-configured.
+
 #### Setting up IMS
 
 Behind the scenes, there is an app repository this gets registered with. It is exposed through IMS, so be sure to have your instances configured with IMS and in the same organization as your users and apps.
@@ -144,10 +148,10 @@ Behind the scenes, there is an app repository this gets registered with. It is e
 
 #### Setting up Admin UI SDK
 
-Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.0.0` or higher:
+Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.3.0` or higher:
 
 ```bash
-composer require "magento/commerce-backend-sdk": ">=3.0"
+composer require "magento/commerce-backend-sdk": ">=3.3"
 ```
 
 Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
@@ -160,7 +164,62 @@ Once setup, click **Refresh Registrations** to bring in the app. This will expos
 
 # Configuration
 
-Store Locator leverages native Adobe Commerce SaaS Sources and Inventory to provide store locations and product availablity.
+Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
+
+## App Management Configuration
+
+Store Locator uses **Adobe Commerce App Management** to securely store Commerce API credentials. This replaces the previous approach of storing tokens in public configuration files.
+
+### What is App Management?
+
+App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > App Management) for configuring app settings. Credentials are stored securely in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
+
+### Configuration Fields
+
+The following fields are configurable via App Management:
+
+| Field               | Type     | Description                                                            |
+| ------------------- | -------- | ---------------------------------------------------------------------- |
+| `restApiBaseUrl`    | URL      | Your Commerce REST API base URL (e.g., `https://commerce.example.com`) |
+| `authType`          | List     | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS)            |
+| `consumerKey`       | Password | Commerce integration consumer key (OAuth only)                         |
+| `consumerSecret`    | Password | Commerce integration consumer secret (OAuth only)                      |
+| `accessToken`       | Password | Commerce integration access token (OAuth only)                         |
+| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only)                  |
+| `imsClientId`       | Password | Adobe IMS client ID (SaaS only)                                        |
+| `imsClientSecret`   | Password | Adobe IMS client secret (SaaS only)                                    |
+
+### Setup Instructions
+
+1. **Deploy the app first:**
+
+   ```bash
+   aio app deploy
+   ```
+
+2. **Register the app in Commerce Admin:**
+   - Go to **Apps** > **App Management**
+   - Find "Store Locator" and click **Configure**
+   - Fill in your Commerce credentials based on your deployment type:
+
+   **For PaaS/On-Premise:**
+   - Set `authType` to "PaaS/On-Premise (OAuth 1.0a)"
+   - Enter your Integration credentials from Commerce Admin (System > Extensions > Integrations)
+
+   **For SaaS:**
+   - Set `authType` to "SaaS (IMS)"
+   - Enter your IMS client credentials
+
+3. **Refresh registrations:**
+   - Go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK**
+   - Click **Refresh Registrations**
+
+### Security Benefits
+
+- **No exposed tokens:** Credentials never appear in public storefront code
+- **Server-side authentication:** All API calls go through the inventory-proxy action
+- **Automatic token management:** IMS tokens are automatically refreshed; OAuth tokens can be regenerated
+- **Merchant-controlled:** Merchants configure credentials through Admin UI, not by editing code
 
 ## Sources
 

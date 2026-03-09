@@ -38,6 +38,7 @@ function main() {
         ],
         page: {
           title: "Store Locator",
+          sandbox: "allow-popups allow-popups-to-escape-sandbox",
         },
       },
     },
