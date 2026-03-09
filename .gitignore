@@ -42,3 +42,7 @@ logs
 
 ignore-me
 *.crt
+
+# Agent/session artifacts
+.sisyphus
+session-*.md

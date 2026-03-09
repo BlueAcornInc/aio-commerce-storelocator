@@ -1,7 +1,5 @@
 name: Trigger Docs Deployment
 on:
-  # release:
-  #   types: [published]
   push:
     branches: ["main"]
     paths:
@@ -13,18 +11,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Build payload
+        id: payload
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const message = context.payload.head_commit?.message || '';
+            const truncated = message.length > 200
+              ? message.substring(0, 200) + '...'
+              : message;
+            return JSON.stringify({
+              repository: context.payload.repository.full_name,
+              tag: context.ref.replace('refs/heads/', ''),
+              release_url: context.payload.head_commit?.url || '',
+              package_name: context.payload.repository.name,
+              sha: context.sha,
+              commit_message: truncated
+            });
+
       - name: Trigger deployment in main repo
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
           repository: BlueAcornInc/aio-commerce-apps
           event-type: release-trigger
-          client-payload: |
-            {
-              "repository": ${{ toJSON(github.repository) }},
-              "tag": ${{ toJSON(github.ref_name) }},
-              "release_url": ${{ toJSON(github.event.head_commit.url) }},
-              "package_name": ${{ toJSON(github.event.repository.name) }},
-              "sha": ${{ toJSON(github.sha) }},
-              "commit_message": ${{ toJSON(github.event.head_commit.message) }}
-            }
+          client-payload: ${{ steps.payload.outputs.result }}
