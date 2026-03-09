@@ -15,7 +15,7 @@ import { Support } from "./Support";
 import { useState } from "react";
 
 export const MainPage = (props) => {
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState("1");
 
   const onSelectionTabChange = (selectedTabKey) => {
     setSelectedTab(selectedTabKey);
