@@ -46,6 +46,9 @@ jobs:
           TECHNICALACCOUNTEMAIL: ${{ vars.TECHNICALACCEMAIL_STAGE }}
           IMSORGID: ${{ vars.IMSORGID_STAGE }}
           SCOPES: ${{ vars.SCOPES_STAGE }}
+      - name: Create .env for commerce lib
+        run: |
+          echo "AIO_COMMERCE_CONFIG_ENCRYPTION_KEY=${{ secrets.AIO_COMMERCE_CONFIG_ENCRYPTION_KEY_STAGE }}" > .env
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_STAGE }}

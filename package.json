@@ -68,8 +68,7 @@
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
     "prepare": "husky",
-    "fix-all": "npm run format:fix && npm run lint:fix",
-    "postinstall": "npx aio-commerce-lib-app hooks postinstall"
+    "fix-all": "npm run format:fix && npm run lint:fix"
   },
   "engines": {
     "node": "^16.13 || >=18"
