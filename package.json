@@ -1,6 +1,6 @@
 {
   "name": "store-locator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": {
     "name": "Doug Hatcher",
     "email": "doug.hatcher@blueacornici.com"
@@ -23,9 +23,9 @@
   "dependencies": {
     "@adobe/aio-cli": "^10.3.4",
     "@adobe/aio-commerce-lib-api": "^0.6.1",
-    "@adobe/aio-commerce-lib-app": "^0.3.2",
-    "@adobe/aio-commerce-lib-config": "^0.13.2",
-    "@adobe/aio-commerce-sdk": "^0.7.3",
+    "@adobe/aio-commerce-lib-app": "^1.0.0",
+    "@adobe/aio-commerce-lib-config": "^1.0.0",
+    "@adobe/aio-commerce-sdk": "^1.0.0",
     "@adobe/aio-sdk": "^6.0.0",
     "@adobe/exc-app": "^1.4.17",
     "@adobe/react-spectrum": "^3.43.0",
@@ -68,9 +68,11 @@
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
     "prepare": "husky",
-    "fix-all": "npm run format:fix && npm run lint:fix"
+    "fix-all": "npm run format:fix && npm run lint:fix",
+    "postinstall": "npx aio-commerce-lib-app hooks postinstall"
   },
   "engines": {
     "node": "^16.13 || >=18"
-  }
+  },
+  "description": "Provides store locator functionality with interactive maps and product availability"
 }

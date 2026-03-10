@@ -277,4 +277,3 @@ Alternatively, there are also debug configs for only UI and each separate action
 ## Use on Storefront frontend
 
 See [blocks/README.md](blocks/README.md)
-
