@@ -60,6 +60,35 @@ $ aio commerce init
 
 This will allow the app to fetch commerce data in future updates.
 
+## Configure App Management
+
+App Management is the Adobe Experience Cloud console that connects your App Builder apps to your Commerce instance. Navigate to your organization's App Management page:
+
+`Adobe Experience Cloud > Commerce > App Management`
+
+Select your app to open its configuration page.
+
+### SaaS (IMS) -- for ACCS Instances
+
+For Adobe Commerce as a Cloud Service (ACCS), select **SaaS (IMS)** as the Authentication Type:
+
+- **Commerce REST API Base URL**: Auto-populated for your ACCS instance (e.g., `https://na1-rest.adbe.com/api/v1`)
+- **Authentication Type**: SaaS (IMS)
+- **Consumer Key / Secret, Access Token / Secret**: Leave blank (PaaS only)
+- **IMS Client ID**: Your App Builder project's OAuth server-to-server client ID from the [Developer Console](https://developer.adobe.com/)
+- **IMS Client Secret**: The matching client secret
+
+![App Management SaaS Configuration](img/app-management-saas.png)
+
+### PaaS / On-Premise (OAuth 1.0a)
+
+For Adobe Commerce Cloud (PaaS) or on-premise instances, select **PaaS/On-Premise (OAuth 1.0a)** as the Authentication Type:
+
+- **Commerce REST API Base URL**: Your Commerce instance URL (e.g., `https://your-instance.magentosite.cloud`)
+- **Authentication Type**: PaaS/On-Premise (OAuth 1.0a)
+- **Consumer Key / Secret, Access Token / Secret**: From the integration created in the [previous step](#create-an-integration-in-adobe-commerce-admin)
+- **IMS Client ID / IMS Client Secret**: From your App Builder project in the [Developer Console](https://developer.adobe.com/)
+
 ## Register App to Commerce Instance
 
 This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured.
