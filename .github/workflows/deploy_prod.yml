@@ -40,6 +40,7 @@ jobs:
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_PROD }}
+          AIO_COMMERCE_CONFIG_ENCRYPTION_KEY: ${{ secrets.AIO_COMMERCE_CONFIG_ENCRYPTION_KEY_PROD }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
@@ -55,6 +56,7 @@ jobs:
           AIO_PROJECT_WORKSPACE_ID: ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
           AIO_PROJECT_WORKSPACE_NAME: ${{ vars.AIO_PROJECT_WORKSPACE_NAME_PROD }}
           AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ vars.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_PROD }}
+          AIO_COMMERCE_CONFIG_ENCRYPTION_KEY: ${{ secrets.AIO_COMMERCE_CONFIG_ENCRYPTION_KEY_PROD }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}

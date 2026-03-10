@@ -1,0 +1,72 @@
+{
+  "businessConfig": {
+    "schema": [
+      {
+        "description": "The base URL for your Adobe Commerce REST API (e.g., https://commerce.example.com)",
+        "label": "Commerce REST API Base URL",
+        "name": "restApiBaseUrl",
+        "type": "url"
+      },
+      {
+        "default": "oauth",
+        "description": "Select your Commerce authentication method",
+        "label": "Authentication Type",
+        "name": "authType",
+        "options": [
+          {
+            "label": "PaaS/On-Premise (OAuth 1.0a)",
+            "value": "oauth"
+          },
+          {
+            "label": "SaaS (IMS)",
+            "value": "ims"
+          }
+        ],
+        "selectionMode": "single",
+        "type": "list"
+      },
+      {
+        "description": "Commerce integration consumer key (for OAuth 1.0a - PaaS/On-Premise)",
+        "label": "Consumer Key",
+        "name": "consumerKey",
+        "type": "password"
+      },
+      {
+        "description": "Commerce integration consumer secret (for OAuth 1.0a - PaaS/On-Premise)",
+        "label": "Consumer Secret",
+        "name": "consumerSecret",
+        "type": "password"
+      },
+      {
+        "description": "Commerce integration access token",
+        "label": "Access Token",
+        "name": "accessToken",
+        "type": "password"
+      },
+      {
+        "description": "Commerce integration access token secret",
+        "label": "Access Token Secret",
+        "name": "accessTokenSecret",
+        "type": "password"
+      },
+      {
+        "description": "Adobe IMS client ID (for SaaS authentication)",
+        "label": "IMS Client ID",
+        "name": "imsClientId",
+        "type": "password"
+      },
+      {
+        "description": "Adobe IMS client secret (for SaaS authentication)",
+        "label": "IMS Client Secret",
+        "name": "imsClientSecret",
+        "type": "password"
+      }
+    ]
+  },
+  "metadata": {
+    "description": "Provides store locator functionality with interactive maps and product availability",
+    "displayName": "Store Locator",
+    "id": "store-locator",
+    "version": "1.0.5"
+  }
+}
