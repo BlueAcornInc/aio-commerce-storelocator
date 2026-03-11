@@ -39,12 +39,15 @@ jobs:
           TECHNICALACCOUNTEMAIL: ${{ vars.TECHNICALACCEMAIL_PROD }}
           IMSORGID: ${{ vars.IMSORGID_PROD }}
           SCOPES: ${{ vars.SCOPES_PROD }}
+      - name: Create .env for commerce lib
+        run: |
+          echo "AIO_COMMERCE_CONFIG_ENCRYPTION_KEY=${{ secrets.AIO_COMMERCE_CONFIG_ENCRYPTION_KEY_PROD }}" > .env
       - name: Pack App
         run: |
           aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }}
           aio console project select ${{ vars.AIO_PROJECT_ID_PROD }}
           aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
-          aio app use --no-input
+          aio app use --global --no-input
           aio app pack
           mv dist/app.zip dist/storelocator-${{ github.ref_name }}.zip
         env:
