@@ -47,7 +47,7 @@ jobs:
           aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }}
           aio console project select ${{ vars.AIO_PROJECT_ID_PROD }}
           aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
-          aio app use --global --no-input
+          aio app use --global --no-input --no-service-sync
           aio app pack
           mv dist/app.zip dist/storelocator-${{ github.ref_name }}.zip
         env:
