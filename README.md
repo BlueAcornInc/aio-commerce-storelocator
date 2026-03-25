@@ -178,6 +178,15 @@ Store Locator uses **Adobe Commerce App Management** to securely store Commerce 
 
 App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > App Management) for configuring app settings. Credentials are stored securely in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
 
+#### `restApiBaseUrl` Format
+
+The `restApiBaseUrl` field varies depending on your deployment type:
+
+- **SaaS (Adobe Commerce as a Cloud Service):** The base URL usually includes the tenant ID and should **not** include `/rest`.
+  - Example: `https://na1-sandbox.api.commerce.adobe.com/[tenant-id]/`
+- **PaaS / On-Prem:** The base URL should end with `/rest/V1`.
+  - Example: `https://[environment-name].us-4.magentosite.cloud/rest/V1`
+
 #### Configuration Fields
 
 The following fields are configurable via App Management:
