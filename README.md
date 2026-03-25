@@ -48,7 +48,9 @@ This guide will walk a merchant or a developer through how to set up this projec
 
 ### Pre-Reqs
 
-- **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
+- **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization. The following APIs must be added to the project:
+  - **Adobe Commerce as a Cloud Service** API (for SaaS environments)
+  - **I/O Management API** (for PaaS and On-Prem environments)
 - **Adobe Commerce:** Version 2.4.7 or higher / Adobe Commerce SaaS (Adobe Commerce as a Cloud Service).
 - **Adobe I/O CLI and plugins:** For deploying App Builder actions.
   - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
