@@ -49,7 +49,7 @@ This guide will walk a merchant or a developer through how to set up this projec
 ### Pre-Reqs
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
-- **Adobe Commerce:** Version 2.4.7 or higher.
+- **Adobe Commerce:** Version 2.4.7 or higher / Adobe Commerce SaaS (Adobe Commerce as a Cloud Service).
 - **Adobe I/O CLI and plugins:** For deploying App Builder actions.
   - For AIO CLI installation see (https://developer.adobe.com/runtime/docs/guides/tools/cli_install/)
   - Plugins:
