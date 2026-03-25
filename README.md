@@ -69,7 +69,9 @@ This guide will walk a merchant or a developer through how to set up this projec
 * Local environment running linux or compatible (i.e. MacOS or Windows with WSL2)
   - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman. The devcontainer is only available from the GitHub repository (https://github.com/BlueAcornInc/aio-commerce-storelocator).
 
-### Setup Storefront
+### Setup EDS Storefront
+
+> **Note:** This app is built for **Edge Delivery Services (EDS) Storefront** (document-based authoring). It is not designed for Luma or PWA Studio storefronts.
 
 If you haven't already, we need to prepare the project and workspaces within our Adobe App Builder organization, as well as the code repos that represent Adobe Commerce Storefront and any additional public apps you may need to use.
 
