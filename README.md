@@ -42,7 +42,7 @@ It integrates Leaflet.js to display store locations and enables filtering by ZIP
 - Listens for `storeNum` and `updateAvailability` events.
 - Updates UI dynamically when a store is selected.
 
-## Local Setup
+## Setup
 
 This guide will walk a merchant or a developer through how to set up this project with Adobe Commerce. It assumes you have nothing but the following entitlements from Adobe:
 
@@ -64,7 +64,7 @@ This guide will walk a merchant or a developer through how to set up this projec
   - Storefront extension module (adobe-commerce/storefront-compatibility)
   - IMS module (adobe-commerce/adobe-ims-metapackage)
 
-* Local evironment running linux or compatible (i.e. MacOS or Windows with WCL2)
+* Local environment running linux or compatible (i.e. MacOS or Windows with WSL2)
   - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman. The devcontainer is only available from the GitHub repository (https://github.com/BlueAcornInc/aio-commerce-storelocator).
 
 ### Setup Storefront
@@ -105,7 +105,7 @@ Once this is complete, you may add the app to your commerce instance by going to
 - This step allows your App Builder application to authenticate and communicate with your Adobe Commerce backend.
 
 - In the Adobe Commerce Admin panel:
-  - Navigate to:  
+  - Navigate to:
     `System > Extensions > Integrations`
     - Click **Add New Integration**
 
@@ -156,25 +156,25 @@ composer require "magento/commerce-backend-sdk": ">=3.3"
 
 Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
 
-### Running Locally
+#### Running Locally
 
 ![Running Admin UI SDK Locally](docs/img/admin-ui-sdk-setup.png)
 
 Once setup, click **Refresh Registrations** to bring in the app. This will expose the App in the _Store Locator_ section of the Main Admin Menu.
 
-# Configuration
+## Configuration
 
 Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
 
-## App Management Configuration
+### App Management Configuration
 
 Store Locator uses **Adobe Commerce App Management** to securely store Commerce API credentials. This replaces the previous approach of storing tokens in public configuration files.
 
-### What is App Management?
+#### What is App Management?
 
 App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > App Management) for configuring app settings. Credentials are stored securely in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
 
-### Configuration Fields
+#### Configuration Fields
 
 The following fields are configurable via App Management:
 
@@ -189,7 +189,7 @@ The following fields are configurable via App Management:
 | `imsClientId`       | Password | Adobe IMS client ID (SaaS only)                                        |
 | `imsClientSecret`   | Password | Adobe IMS client secret (SaaS only)                                    |
 
-### Setup Instructions
+#### Setup Instructions
 
 1. **Deploy the app first:**
 
@@ -210,38 +210,61 @@ The following fields are configurable via App Management:
    - Set `authType` to "SaaS (IMS)"
    - Enter your IMS client credentials
 
+   ![App Management SaaS Configuration](docs/img/app-management-saas.png)
+
 3. **Refresh registrations:**
    - Go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK**
    - Click **Refresh Registrations**
 
-### Security Benefits
+#### Security Benefits
 
 - **No exposed tokens:** Credentials never appear in public storefront code
 - **Server-side authentication:** All API calls go through the inventory-proxy action
 - **Automatic token management:** IMS tokens are automatically refreshed; OAuth tokens can be regenerated
 - **Merchant-controlled:** Merchants configure credentials through Admin UI, not by editing code
 
-## Sources
+### Sources
 
 You can find Sources in the Stores menu under Inventory.
 
 ![Find Sources](docs/img/find-sources.png)
 
-### Add New Sources
+#### Add New Sources
 
 ![Add New Sources](docs/img/add-new-source.png)
 
-### Configure Inventory
+#### Configure Inventory
 
-Once sources are added, you can use can add inventory to the sources through Catalog > Products.
+Once sources are added, you can add inventory to the sources through Catalog > Products.
 
-# Local Setup
+## Storefront Blocks
 
-## Setup
+The Store Locator includes shared blocks for Adobe Commerce Storefront (Edge Delivery Services):
+
+- **[Store Locator Block](blocks/store-locator/README.md)** — Interactive store finder with map, ZIP code filtering, and store selection.
+- **[Product Availability Block](blocks/product-availability/README.md)** — Displays product inventory availability across store locations.
+
+### Block Installation
+
+See the [Blocks README](blocks/README.md) for npm installation and configuration instructions.
+
+Alternatively, you can manually copy the `store-locator/` and `product-availability/` directories from `blocks/` to your storefront's `blocks/` directory.
+
+### Document-based Authoring
+
+To add the store locator block, create a table within the document you want to embed it, with the header named `store-locator`. This will reference the block copied in with the previous step.
+
+![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
+
+With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
+
+## Local Development
+
+### Setup
 
 - Populate the `.env` file in the project root and fill it as shown [below](#env)
 
-## Local Dev
+### Local Dev
 
 - `aio app run` to start your local Dev server
 - App will run on `localhost:9080` by default
@@ -249,12 +272,10 @@ Once sources are added, you can use can add inventory to the sources through Cat
 By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
 local serverless stack and also run your actions locally use the `aio app run --local` option.
 
-## Deploy & Cleanup
+### Deploy & Cleanup
 
 - `aio app deploy` to build and deploy all actions on Runtime and static files to CDN
 - `aio app undeploy` to undeploy the app
-
-## Config
 
 ### `.env`
 
@@ -268,12 +289,8 @@ You can generate this file using the command `aio app use`.
 # AIO_RUNTIME_NAMESPACE=
 ```
 
-## Debugging in VS Code
+### Debugging in VS Code
 
 While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
 and select the debugging configuration called `WebAndActions`.
 Alternatively, there are also debug configs for only UI and each separate action.
-
-## Use on Storefront frontend
-
-See [blocks/README.md](blocks/README.md)
