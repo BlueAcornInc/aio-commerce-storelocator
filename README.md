@@ -1,50 +1,22 @@
 # Store Locator by Blue Acorn
 
-This app introduces store locator functionality, allowing users to select a store and view details on a map using Adobe Commerce Storefront.
+This app introduces store locator functionality, allowing users to select a store and view details on a map using Adobe Commerce Storefront (Edge Delivery Services).
 
 It integrates Leaflet.js to display store locations and enables filtering by ZIP code. It also provides store availability leveraging the native commerce APIs.
 
 ## Features
 
 - Store availability by leveraging native inventory sources
-- Loads Leaflet.js and its CSS for interactive maps.
-- Displays a list of store locations retrieved from an API.
-- Allows users to filter stores by ZIP code.
-- Highlights the selected store and updates the session storage.
-- Dynamically updates UI components with selected store details.
+- Interactive maps powered by Leaflet.js
+- Store locations retrieved from an API and displayed as cards and map markers
+- ZIP code filtering to narrow down store results
+- Store selection with session storage persistence
+- Dynamic UI updates when a store is selected
+- Product availability per store via native Commerce inventory
 
-## Implementation
+## Setup Instructions
 
-### 1. **Initialize the Block**
-
-- Loads Leaflet.js and required CSS.
-- Creates UI components including a store list, ZIP code filter, and interactive map.
-
-### 2. **Fetch and Display Store Data**
-
-- Retrieves store data from `/store-locator/stores.json`.
-- Dynamically generates store cards and map markers.
-
-### 3. **Interactive Store Selection**
-
-- Clicking a store card triggers an event to update session storage.
-- Updates the displayed selected store details.
-- Scrolls the list and pans the map to the selected store.
-
-### 4. **ZIP Code Filtering**
-
-- Implements a form to filter stores by ZIP code.
-- Hides stores that do not match the entered ZIP.
-- Adjusts map marker visibility accordingly.
-
-### 5. **Event Handling and Custom Events**
-
-- Listens for `storeNum` and `updateAvailability` events.
-- Updates UI dynamically when a store is selected.
-
-## Setup
-
-This guide will walk a merchant or a developer through how to set up this project with Adobe Commerce. It assumes you have nothing but the following entitlements from Adobe:
+This guide walks a merchant or developer through setting up the Store Locator with Adobe Commerce. The app supports both **Adobe Commerce PaaS/On-Prem** and **Adobe Commerce SaaS** (Adobe Commerce as a Cloud Service).
 
 ### Pre-Reqs
 
@@ -61,32 +33,100 @@ This guide will walk a merchant or a developer through how to set up this projec
   $ aio plugins:install https://github.com/adobe-commerce/aio-cli-plugin-commerce
   ```
 
-- **Adobe Commerce Modules (PaaS and On-Prem only)**:
-  - Admin UI SDK module (magento/commerce-backend-sdk >= 3.3.0)
-  - Storefront extension module (adobe-commerce/storefront-compatibility)
-  - IMS module (adobe-commerce/adobe-ims-metapackage)
-
-* Local environment running linux or compatible (i.e. MacOS or Windows with WSL2)
+- Local environment running Linux or compatible (i.e. macOS or Windows with WSL2)
   - This repo contains a devcontainer suitable for running the solution, which requires a compatible IDE like Visual Studio Code and an OCI Runtime like Docker or Podman. The devcontainer is only available from the GitHub repository (https://github.com/BlueAcornInc/aio-commerce-storelocator).
+
+### Adobe Commerce PaaS / On-Prem Setup
+
+These steps apply to Adobe Commerce Cloud (PaaS) and On-Premise deployments.
+
+#### 1. Install Required Commerce Modules
+
+Install the following Composer packages on your Commerce instance:
+
+```bash
+# Admin UI SDK (required for app registration)
+composer require "magento/commerce-backend-sdk":">=3.3"
+
+# Storefront compatibility (required for EDS Storefront)
+composer require adobe-commerce/storefront-compatibility
+
+# IMS integration (required for App Builder communication)
+composer require adobe-commerce/adobe-ims-metapackage
+```
+
+#### 2. Configure IMS
+
+The app communicates with your Commerce instance through Adobe IMS. Ensure your instance is configured with IMS and belongs to the same organization as your App Builder project.
+
+- [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
+
+#### 3. Configure Admin UI SDK
+
+Go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
+
+![Running Admin UI SDK Locally](docs/img/admin-ui-sdk-setup.png)
+
+#### 4. Create an Integration
+
+This step allows your App Builder application to authenticate and communicate with your Commerce backend via OAuth 1.0a.
+
+In the Adobe Commerce Admin panel:
+
+1. Navigate to **System** > **Extensions** > **Integrations**
+2. Click **Add New Integration**
+3. Fill in the following:
+   - **Name**: e.g. `Store Locator App Builder Integration`
+   - Leave other fields blank unless required by your organization
+4. Under the **API** tab, click **Select All** to grant all permissions, or configure scopes as needed
+5. Save the integration and then **activate** it
+6. You will be shown the following credentials:
+   - **Consumer Key**
+   - **Consumer Secret**
+   - **Access Token**
+   - **Access Token Secret**
+
+These credentials will be entered in App Management (see [App Management Configuration](#app-management-configuration) below).
+
+#### 5. Install Storefront Compatibility Package
+
+For Adobe Commerce Cloud and On-Premise, install the Adobe Storefront compatibility package (PHP module). See the [Adobe Experience League](https://experienceleague.adobe.com/developer/commerce/storefront/setup/configuration/storefront-compatibility/install/) article for the complete procedure.
+
+### Adobe Commerce SaaS Setup
+
+These steps apply to Adobe Commerce as a Cloud Service (SaaS) deployments.
+
+SaaS instances come with IMS, Admin UI SDK, and the Storefront compatibility layer **pre-configured**. No Composer packages or IMS setup is required.
+
+#### 1. Ensure API Access
+
+In the [Adobe Developer Console](https://developer.adobe.com/console/), verify that your App Builder project has the **Adobe Commerce as a Cloud Service** API added.
+
+#### 2. Obtain IMS Credentials
+
+For SaaS authentication, you will need:
+
+- **IMS Client ID** — from your Adobe Developer Console project
+- **IMS Client Secret** — from your Adobe Developer Console project
+
+These credentials will be entered in App Management (see [App Management Configuration](#app-management-configuration) below).
 
 ### Setup EDS Storefront
 
 > **Note:** This app is built for **Edge Delivery Services (EDS) Storefront** (document-based authoring). It is not designed for Luma or PWA Studio storefronts.
 
-If you haven't already, we need to prepare the project and workspaces within our Adobe App Builder organization, as well as the code repos that represent Adobe Commerce Storefront and any additional public apps you may need to use.
+If you haven't already, prepare the project and workspaces within your Adobe App Builder organization, as well as the code repos that represent Adobe Commerce Storefront.
 
-`aio commerce init` will create a few repos for you in github, so you must be authenticated with github. the `gh` tool can help with this.
+`aio commerce init` will create a few repos for you in GitHub, so you must be authenticated with GitHub. The `gh` tool can help with this.
 
 ```bash
 $ gh auth login
 $ aio commerce init
 ```
 
-For Adobe Commerce Cloud and on-premise installation, you will need to install Adobe Storefront compatibility package, a PHP module. See [Adobe Experience League](https://experienceleague.adobe.com/developer/commerce/storefront/setup/configuration/storefront-compatibility/install/) article for the complete procedure.
-
 ### Deploy The App
 
-If you are in this repo and want to deploy this app, use `aio app use` to point to the right App Builder workspace. You can use the following sequence to set this up. You may also login to Adobe Developer App Builder Console, navigate to the project and workspace, and download a `workspace.json` that can also configure this project.
+Use `aio app use` to point to the right App Builder workspace. You can use the following sequence to set this up. You may also log in to the Adobe Developer App Builder Console, navigate to the project and workspace, and download a `workspace.json` that can also configure this project.
 
 > **Note:** Be sure to run `npm install` before deploying to ensure all dependencies are installed.
 
@@ -102,7 +142,7 @@ npm install
 aio app deploy # this will build the app and register it for use in Adobe Commerce
 ```
 
-Once this is complete, you may add the app to your commerce instance by going to Stores > Configuration > Adobe Services > Admin UI SDK > Refresh Registrations, then in Configure Registrations selecting the app to use.
+Once this is complete, add the app to your Commerce instance by going to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** > **Refresh Registrations**, then in Configure Registrations selecting the app to use.
 
 ### Configure API Mesh
 
@@ -138,79 +178,9 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
 For more details, see the [API Mesh documentation](https://developer.adobe.com/commerce/extensibility/api-mesh/).
 
-### Create an Integration in Adobe Commerce Admin
-
-- This step allows your App Builder application to authenticate and communicate with your Adobe Commerce backend.
-
-- In the Adobe Commerce Admin panel:
-  - Navigate to:
-    `System > Extensions > Integrations`
-    - Click **Add New Integration**
-
-    - Fill in the following values:
-      - **Name**: e.g. `Store Locator App Builder Integration`
-      - Leave other fields blank unless required by your organization
-
-    - Under the **API** tab, click **Select All** to grant all permissions, or configure scopes as needed
-
-    - Save the integration and then **activate** it
-
-    - You will be shown the following credentials:
-      - **Consumer Key**
-      - **Consumer Secret**
-      - **Access Token**
-      - **Access Token Secret**
-
-- Remove the commented out Option 1 fields and update these to your `.env` file:
-
-```env
-  COMMERCE_CONSUMER_KEY=your-consumer-key
-  COMMERCE_CONSUMER_SECRET=your-consumer-secret
-  COMMERCE_ACCESS_TOKEN=your-access-token
-  COMMERCE_ACCESS_TOKEN_SECRET=your-access-token-secret
-```
-
-This will allow the app to fetch commerce data in future updates.
-
-### Register App to Commerce Instance
-
-This app has an Administrative compliment, which requires the Adobe IMS and Admin UI SDK to be configured.
-
-> **PaaS & On-Prem Only:** The following steps (IMS configuration, Admin UI SDK composer install) apply to PaaS and On-Premise deployments. SaaS instances have these pre-configured.
-
-#### Setting up IMS
-
-Behind the scenes, there is an app repository this gets registered with. It is exposed through IMS, so be sure to have your instances configured with IMS and in the same organization as your users and apps.
-
-- [Setup IMS for Adobe Commerce](https://experienceleague.adobe.com/en/docs/commerce-admin/start/admin/ims/adobe-ims-config)
-
-#### Setting up Admin UI SDK
-
-Complete the [Admin UI SDK installation process](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/installation/) and install version `3.3.0` or higher:
-
-```bash
-composer require "magento/commerce-backend-sdk": ">=3.3"
-```
-
-Stores > Configuration > Adobe Services > Admin UI SDK and configure it to suit your needs. Refer to official [documentation](https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/#general-configuration) for more details.
-
-#### Running Locally
-
-![Running Admin UI SDK Locally](docs/img/admin-ui-sdk-setup.png)
-
-Once setup, click **Refresh Registrations** to bring in the app. This will expose the App in the _Store Locator_ section of the Main Admin Menu.
-
-## Configuration
-
-Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
-
 ### App Management Configuration
 
-Store Locator uses **Adobe Commerce App Management** to securely store Commerce API credentials. This replaces the previous approach of storing tokens in public configuration files.
-
-#### What is App Management?
-
-App Management provides a secure, merchant-facing UI in Commerce Admin (Apps > App Management) for configuring app settings. Credentials are stored securely in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
+Store Locator uses **Adobe Commerce App Management** to securely store Commerce API credentials. Credentials are stored in App Builder and retrieved server-side by Runtime actions — never exposed in public storefront code.
 
 #### `restApiBaseUrl` Format
 
@@ -223,45 +193,36 @@ The `restApiBaseUrl` field varies depending on your deployment type:
 
 #### Configuration Fields
 
-The following fields are configurable via App Management:
+The following fields are configurable via App Management (**Apps** > **App Management** > Store Locator > **Configure**):
 
-| Field               | Type     | Description                                                            |
-| ------------------- | -------- | ---------------------------------------------------------------------- |
-| `restApiBaseUrl`    | URL      | Your Commerce REST API base URL (e.g., `https://commerce.example.com`) |
-| `authType`          | List     | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS)            |
-| `consumerKey`       | Password | Commerce integration consumer key (OAuth only)                         |
-| `consumerSecret`    | Password | Commerce integration consumer secret (OAuth only)                      |
-| `accessToken`       | Password | Commerce integration access token (OAuth only)                         |
-| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only)                  |
-| `imsClientId`       | Password | Adobe IMS client ID (SaaS only)                                        |
-| `imsClientSecret`   | Password | Adobe IMS client secret (SaaS only)                                    |
+| Field               | Type     | Description                                                 |
+| ------------------- | -------- | ----------------------------------------------------------- |
+| `restApiBaseUrl`    | URL      | Your Commerce REST API base URL (see format above)          |
+| `authType`          | List     | Authentication type: `oauth` (PaaS/On-Prem) or `ims` (SaaS) |
+| `consumerKey`       | Password | Commerce integration consumer key (OAuth only)              |
+| `consumerSecret`    | Password | Commerce integration consumer secret (OAuth only)           |
+| `accessToken`       | Password | Commerce integration access token (OAuth only)              |
+| `accessTokenSecret` | Password | Commerce integration access token secret (OAuth only)       |
+| `imsClientId`       | Password | Adobe IMS client ID (SaaS only)                             |
+| `imsClientSecret`   | Password | Adobe IMS client secret (SaaS only)                         |
 
-#### Setup Instructions
+#### Setup by Deployment Type
 
-1. **Deploy the app first:**
+**For PaaS/On-Premise (OAuth 1.0a):**
 
-   ```bash
-   aio app deploy
-   ```
+1. Set `restApiBaseUrl` to your Commerce URL ending with `/rest/V1`
+2. Set `authType` to "PaaS/On-Premise (OAuth 1.0a)"
+3. Enter your Integration credentials from Commerce Admin (System > Extensions > Integrations)
 
-2. **Register the app in Commerce Admin:**
-   - Go to **Apps** > **App Management**
-   - Find "Store Locator" and click **Configure**
-   - Fill in your Commerce credentials based on your deployment type:
+**For SaaS (IMS):**
 
-   **For PaaS/On-Premise:**
-   - Set `authType` to "PaaS/On-Premise (OAuth 1.0a)"
-   - Enter your Integration credentials from Commerce Admin (System > Extensions > Integrations)
+1. Set `restApiBaseUrl` to your Commerce API URL with tenant ID (no `/rest` suffix)
+2. Set `authType` to "SaaS (IMS)"
+3. Enter your IMS client credentials from Adobe Developer Console
 
-   **For SaaS:**
-   - Set `authType` to "SaaS (IMS)"
-   - Enter your IMS client credentials
+![App Management SaaS Configuration](docs/img/app-management-saas.png)
 
-   ![App Management SaaS Configuration](docs/img/app-management-saas.png)
-
-3. **Refresh registrations:**
-   - Go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK**
-   - Click **Refresh Registrations**
+After configuring, go to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** and click **Refresh Registrations**.
 
 #### Security Benefits
 
@@ -270,7 +231,9 @@ The following fields are configurable via App Management:
 - **Automatic token management:** IMS tokens are automatically refreshed; OAuth tokens can be regenerated
 - **Merchant-controlled:** Merchants configure credentials through Admin UI, not by editing code
 
-### Sources
+### Configure Sources and Inventory
+
+Store Locator leverages native Adobe Commerce Sources and Inventory to provide store locations and product availability.
 
 You can find Sources in the Stores menu under Inventory.
 
@@ -284,7 +247,7 @@ You can find Sources in the Stores menu under Inventory.
 
 Once sources are added, you can add inventory to the sources through Catalog > Products.
 
-## Storefront Blocks
+## EDS Storefront Blocks
 
 The Store Locator includes shared blocks for Adobe Commerce Storefront (Edge Delivery Services):
 
