@@ -121,7 +121,7 @@ function getBearerToken(params) {
  *        e.g. 400
  * @param {string} message the error message.
  *        e.g. 'missing xyz parameter'
- * @param {*} [logger] an optional logger instance object with an `info` method
+ * @param {object} [logger] an optional logger instance object with an `info` method
  *        e.g. `new require('@adobe/aio-sdk').Core.Logger('name')`
  * @returns {object} the error object, ready to be returned from the action main's function.
  */

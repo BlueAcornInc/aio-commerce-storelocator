@@ -63,7 +63,7 @@ function getOauthClient(options, logger) {
    * @param {object} requestData - Request configuration
    * @param {string} requestData.url - API endpoint URL
    * @param {string} requestData.method - HTTP method (GET, POST, PUT, DELETE)
-   * @param {*} [requestData.body] - Request body for POST/PUT requests
+   * @param {string|object} [requestData.body] - Request body for POST/PUT requests
    * @param {string} [requestToken] - Optional bearer token for IMS authentication
    * @param {object} [customHeaders] - Optional custom headers to include
    * @returns {Promise<object>} Parsed JSON response from API
