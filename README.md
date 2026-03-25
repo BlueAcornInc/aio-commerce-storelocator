@@ -104,6 +104,40 @@ aio app deploy # this will build the app and register it for use in Adobe Commer
 
 Once this is complete, you may add the app to your commerce instance by going to Stores > Configuration > Adobe Services > Admin UI SDK > Refresh Registrations, then in Configure Registrations selecting the app to use.
 
+### Configure API Mesh
+
+This app includes a `mesh.json` configuration file that sets up an API Mesh to proxy Adobe Commerce GraphQL requests. The mesh routes requests through a single `AdobeCommerceAPI` source pointed at your Commerce instance's `/graphql` endpoint.
+
+1. **Ensure the API Mesh plugin is installed:**
+
+   ```bash
+   aio plugins:install @adobe/aio-cli-plugin-api-mesh
+   ```
+
+2. **Create the mesh** (from the project root):
+
+   ```bash
+   aio api-mesh create mesh.json
+   ```
+
+   This registers the mesh with your App Builder workspace. The `COMMERCE_ENDPOINT` environment variable must be set to your Commerce instance URL (this is populated automatically by `aio app use`).
+
+3. **Verify the mesh is running:**
+
+   ```bash
+   aio api-mesh get
+   ```
+
+   You should see the mesh configuration with the `AdobeCommerceAPI` source.
+
+4. **Update the mesh** after configuration changes:
+
+   ```bash
+   aio api-mesh update mesh.json
+   ```
+
+For more details, see the [API Mesh documentation](https://developer.adobe.com/commerce/extensibility/api-mesh/).
+
 ### Create an Integration in Adobe Commerce Admin
 
 - This step allows your App Builder application to authenticate and communicate with your Adobe Commerce backend.
