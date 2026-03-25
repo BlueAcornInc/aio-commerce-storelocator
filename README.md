@@ -301,6 +301,26 @@ Alternatively, you can manually copy the `store-locator/` and `product-availabil
 
 To add the store locator block, create a table within the document you want to embed it, with the header named `store-locator`. This will reference the block copied in with the previous step.
 
+In your EDS document (Google Doc, SharePoint, or da.live), add a single-cell table like this:
+
+| store-locator |
+| ------------- |
+|               |
+
+This renders as the following HTML on the storefront:
+
+```html
+<div class="store-locator-wrapper">
+  <div class="store-locator block" data-block-name="store-locator">
+    <div>
+      <div></div>
+    </div>
+  </div>
+</div>
+```
+
+The block's `decorate()` function then populates it with the interactive map, store list, ZIP code filter, and store selection UI.
+
 ![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
 
 With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
