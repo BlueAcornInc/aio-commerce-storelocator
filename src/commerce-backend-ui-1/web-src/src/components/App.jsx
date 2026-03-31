@@ -19,7 +19,7 @@ function App(props) {
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
   props.runtime.on("configuration", ({ imsOrg }) => {
-    console.log("configuration change", { imsOrg });
+    // imsOrg is available here for handling org switches
   });
   // respond to history change events
   props.runtime.on("history", ({ type, path }) => {
