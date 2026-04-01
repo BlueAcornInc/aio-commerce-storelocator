@@ -39,16 +39,27 @@ jobs:
           TECHNICALACCOUNTEMAIL: ${{ vars.TECHNICALACCEMAIL_PROD }}
           IMSORGID: ${{ vars.IMSORGID_PROD }}
           SCOPES: ${{ vars.SCOPES_PROD }}
+      - name: Create .env for commerce lib
+        run: |
+          echo "AIO_COMMERCE_CONFIG_ENCRYPTION_KEY=${{ secrets.AIO_COMMERCE_CONFIG_ENCRYPTION_KEY_PROD }}" > .env
       - name: Pack App
         run: |
-          aio console org select ${{ vars.AIO_PROJECT_ORG_ID_PROD }}
-          aio console project select ${{ vars.AIO_PROJECT_ID_PROD }}
-          aio console workspace select ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
-          aio app use --no-input
           aio app pack
           mv dist/app.zip dist/storelocator-${{ github.ref_name }}.zip
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_PROD }}
+          AIO_PROJECT_ID: ${{ vars.AIO_PROJECT_ID_PROD }}
+          AIO_PROJECT_NAME: ${{ vars.AIO_PROJECT_NAME_PROD }}
+          AIO_PROJECT_ORG_ID: ${{ vars.AIO_PROJECT_ORG_ID_PROD }}
+          AIO_PROJECT_ORG_IMS__ORG__ID: ${{ vars.IMSORGID_PROD }}
+          AIO_PROJECT_WORKSPACE_ID: ${{ vars.AIO_PROJECT_WORKSPACE_ID_PROD }}
+          AIO_PROJECT_WORKSPACE_NAME: ${{ vars.AIO_PROJECT_WORKSPACE_NAME_PROD }}
+          # Note: AIO_PROJECT_WORKSPACE_DETAILS_SERVICES is intentionally omitted.
+          # aio-lib-core-config stores env var values as raw strings (no JSON parsing),
+          # but pack.js assumes .services is an array and calls .map() on it. When the
+          # env var is absent, optional chaining safely returns undefined. This is a
+          # known bug in @adobe/aio-cli-plugin-app pack.js (deploy code handles it
+          # correctly via JSON.parse fallback in app-helper.js:444).
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
