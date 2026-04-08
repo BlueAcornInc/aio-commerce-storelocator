@@ -31,9 +31,8 @@ function main() {
           {
             id: `${extensionId}::apps`,
             title: "Store Locator",
-            isSection: false,
+            isSection: true,
             sortOrder: 100,
-            sandbox: "allow-popups",
           },
         ],
         page: {
