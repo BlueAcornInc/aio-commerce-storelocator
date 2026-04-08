@@ -31,7 +31,7 @@ module.exports = defineConfig({
     displayName: "Store Locator",
     description:
       "Provides store locator functionality with interactive maps and product availability",
-    version: "1.0.5",
+    version: "1.0.7",
   },
   businessConfig: {
     schema: [
