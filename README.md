@@ -139,12 +139,13 @@ aio app use
 
 npm install
 
+aio app build
 aio app deploy # this will build the app and register it for use in Adobe Commerce
 ```
 
 Once this is complete, add the app to your Commerce instance by going to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** > **Refresh Registrations**, then in Configure Registrations selecting the app to use.
 
-### Configure API Mesh
+### Configure API Mesh (Optional)
 
 This app includes a `mesh.json` configuration file that sets up an API Mesh to proxy Adobe Commerce GraphQL requests. The mesh routes requests through a single `AdobeCommerceAPI` source pointed at your Commerce instance's `/graphql` endpoint.
 
@@ -156,7 +157,7 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
 2. **Create the mesh** (from the project root):
 
-   > **Note:** The `mesh.json` template references a `COMMERCE_ENDPOINT` environment variable. If you encounter an error creating the mesh, create a `.env` file in the project root with `COMMERCE_ENDPOINT=<your_commerce_graphql_endpoint>` (e.g. `https://your-instance.commercecloud.adobe.com/graphql`). This is optional if `aio app use` has already populated your environment, or if you manage this variable through CI/CD (e.g. GitHub Actions).
+   The `COMMERCE_ENDPOINT` environment variable must be set to your Commerce instance URL in the `.env` file.
 
    ```bash
    aio api-mesh create mesh.json
@@ -172,7 +173,7 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
    You should see the mesh configuration with the `AdobeCommerceAPI` source.
 
-4. **Update the mesh** after configuration changes:
+4. Always **Update the mesh** after configuration changes:
 
    ```bash
    aio api-mesh update mesh.json
@@ -268,6 +269,8 @@ To add the store locator block, create a table within the document you want to e
 
 In your EDS document (Google Doc, SharePoint, or da.live), add a single-cell table like this:
 
+![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
+
 | store-locator |
 | ------------- |
 |               |
@@ -286,9 +289,27 @@ This renders as the following HTML on the storefront:
 
 The block's `decorate()` function then populates it with the interactive map, store list, ZIP code filter, and store selection UI.
 
-![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
+Here is the below example of store-locator block being added to the Products Details Page.
+
+![Store Locator Block](docs/img/store-locator.png)
 
 With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
+
+### Product Availability Block
+
+To add the product availability block to a page, create a single-cell table in your EDS document with the header `product-availability`:
+
+| product-availability |
+| -------------------- |
+|                      |
+
+The block displays product stock availability for the currently selected store. It works in concert with the Store Locator block:
+
+1. When a user selects a store in the Store Locator, the selection is saved to `sessionStorage`.
+2. The Product Availability block listens for the `updateAvailability` event and fetches warehouse stock data for the current product SKU.
+3. If a store is selected, the block displays whether the product is in stock at that location. If no store is selected, it prompts the user to choose one.
+
+> **Note:** This block expects your storefront's `configs.json` to include the `restApiBaseUrl` and `restApiToken` values used by `scripts/commerce.js`. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
 
 ## Local Development
 
@@ -319,10 +340,6 @@ You can generate this file using the command `aio app use`.
 ## please provide your Adobe I/O Runtime credentials
 # AIO_RUNTIME_AUTH=
 # AIO_RUNTIME_NAMESPACE=
-
-## Commerce endpoint for API Mesh (optional — only needed if aio app use
-## did not populate it and you need to create/update the mesh locally)
-# COMMERCE_ENDPOINT=https://your-instance.commercecloud.adobe.com/graphql
 ```
 
 ### Debugging in VS Code
