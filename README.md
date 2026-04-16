@@ -156,11 +156,13 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
 2. **Create the mesh** (from the project root):
 
+   > **Note:** The `mesh.json` template references a `COMMERCE_ENDPOINT` environment variable. If you encounter an error creating the mesh, create a `.env` file in the project root with `COMMERCE_ENDPOINT=<your_commerce_graphql_endpoint>` (e.g. `https://your-instance.commercecloud.adobe.com/graphql`). This is optional if `aio app use` has already populated your environment, or if you manage this variable through CI/CD (e.g. GitHub Actions).
+
    ```bash
    aio api-mesh create mesh.json
    ```
 
-   This registers the mesh with your App Builder workspace. The `COMMERCE_ENDPOINT` environment variable must be set to your Commerce instance URL (this is populated automatically by `aio app use`).
+   This registers the mesh with your App Builder workspace.
 
 3. **Verify the mesh is running:**
 
@@ -317,6 +319,10 @@ You can generate this file using the command `aio app use`.
 ## please provide your Adobe I/O Runtime credentials
 # AIO_RUNTIME_AUTH=
 # AIO_RUNTIME_NAMESPACE=
+
+## Commerce endpoint for API Mesh (optional — only needed if aio app use
+## did not populate it and you need to create/update the mesh locally)
+# COMMERCE_ENDPOINT=https://your-instance.commercecloud.adobe.com/graphql
 ```
 
 ### Debugging in VS Code
