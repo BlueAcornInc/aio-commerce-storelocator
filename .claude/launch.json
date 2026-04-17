@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Admin UI (backend-ui/1)",
+      "runtimeExecutable": "aio",
+      "runtimeArgs": ["app", "dev", "-e", "commerce/backend-ui/1"],
+      "port": 9080
+    },
+    {
+      "name": "Configuration (configuration/1)",
+      "runtimeExecutable": "aio",
+      "runtimeArgs": ["app", "dev", "-e", "commerce/configuration/1"],
+      "port": 9080
+    },
+    {
+      "name": "Extensibility (extensibility/1)",
+      "runtimeExecutable": "aio",
+      "runtimeArgs": ["app", "dev", "-e", "commerce/extensibility/1"],
+      "port": 9080
+    }
+  ]
+}

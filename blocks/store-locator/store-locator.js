@@ -1,8 +1,13 @@
 import { loadCSS, loadScript } from "../../scripts/aem.js";
 
 export default async function decorate(block) {
-  loadCSS("/scripts/leaflet/leaflet.css");
-  loadScript("/scripts/leaflet/leaflet.js");
+  // Leaflet 1.9.4 — loaded from unpkg CDN by default.
+  // To self-host (e.g. behind a corporate proxy), download the Leaflet
+  // release and serve from /scripts/leaflet/ in your storefront repo:
+  // loadCSS("/scripts/leaflet/leaflet.css");
+  // loadScript("/scripts/leaflet/leaflet.js");
+  loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+  loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js");
   const myStoreSession = JSON.parse(window.sessionStorage.getItem("myStore"));
   const getRatingPercentage = (n) => {
     if (typeof n !== "number" || isNaN(n)) {
