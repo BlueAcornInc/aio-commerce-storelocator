@@ -263,11 +263,56 @@ See the [Blocks README](blocks/README.md) for npm installation and configuration
 
 Alternatively, you can manually copy the `store-locator/` and `product-availability/` directories from `blocks/` to your storefront's `blocks/` directory.
 
+### Stores Sheet
+
+The store locator block reads store data from a `store-locator/stores` sheet in your authoring environment (Google Drive, SharePoint, or da.live). This sheet produces a `stores.json` endpoint consumed by the block at runtime.
+
+An example CSV is included at [`blocks/example-stores.csv`](blocks/example-stores.csv). Your sheet should contain these columns:
+
+| Column                  | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| `name`                  | Store name                                       |
+| `rating`                | Star rating (1–5)                                |
+| `numOfReviews`          | Review count label (e.g. "26 reviews")           |
+| `type`                  | Store type label (e.g. "Big Box Store")          |
+| `address`               | Street address                                   |
+| `phone`                 | Phone number                                     |
+| `lat`                   | Latitude                                         |
+| `lng`                   | Longitude                                        |
+| `commerce_warehouse_id` | Commerce source code (maps to inventory sources) |
+| `zip`                   | ZIP code (used for filtering)                    |
+| `state`                 | State                                            |
+| `city`                  | City                                             |
+| `hours`                 | Store hours                                      |
+
+Example `stores.json` output (one entry):
+
+```json
+{
+  "name": "Big Box Store Summerville",
+  "rating": "4",
+  "numOfReviews": "(26 reviews)",
+  "type": "Big Box Store",
+  "address": "450 Azelea Square Blvd",
+  "phone": "8435551212",
+  "lat": "33.0385",
+  "lng": "-80.153",
+  "commerce_warehouse_id": "bbs1",
+  "zip": "29483",
+  "state": "South Carolina",
+  "city": "Summerville"
+}
+```
+
+With the AEM Sidekick installed, you can manage the stores sheet from your authoring environment. Use AEM Sidekick to Preview and Publish changes — this produces the `stores.json` file that drives the storefront experience.
+
+For more details on store card configuration and block customization, see the [Store Locator Block README](blocks/store-locator/README.md).
+
 ### Document-based Authoring
 
-To add the store locator block, create a table within the document you want to embed it, with the header named `store-locator`. This will reference the block copied in with the previous step.
+To add the blocks to a page, create single-cell tables in your EDS document (Google Doc, SharePoint, or da.live) with the block name as the header.
 
-In your EDS document (Google Doc, SharePoint, or da.live), add a single-cell table like this:
+**Store Locator block:**
 
 ![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
 
@@ -275,41 +320,19 @@ In your EDS document (Google Doc, SharePoint, or da.live), add a single-cell tab
 | ------------- |
 |               |
 
-This renders as the following HTML on the storefront:
-
-```html
-<div class="store-locator-wrapper">
-  <div class="store-locator block" data-block-name="store-locator">
-    <div>
-      <div></div>
-    </div>
-  </div>
-</div>
-```
-
-The block's `decorate()` function then populates it with the interactive map, store list, ZIP code filter, and store selection UI.
-
-### Product Availability Block
-
-To add the product availability block to a page, create a single-cell table in your EDS document with the header `product-availability`:
+**Product Availability block:**
 
 | product-availability |
 | -------------------- |
 |                      |
 
-The block displays product stock availability for the currently selected store. It works in concert with the Store Locator block:
+The Product Availability block displays stock status (`In Stock`, `Low Stock`, or `Out of Stock`) for the currently selected store. It queries the Catalog Service GraphQL API using the storefront's existing `commerce-endpoint` from `configs.json` — no additional configuration is required. It works with both Adobe Commerce SaaS and PaaS deployments.
 
-1. When a user selects a store in the Store Locator, the selection is saved to `sessionStorage`.
-2. The Product Availability block queries the Catalog Service GraphQL API (the same `commerce-endpoint` used by the rest of the storefront) for product stock status.
-3. If a store is selected, the block displays whether the product is in stock at that location. If no store is selected, it prompts the user to choose one.
-
-> **Note:** The block uses the storefront's existing `commerce-endpoint` and Catalog Service headers from `configs.json` — no additional configuration is required. It works with both Adobe Commerce SaaS and PaaS deployments. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
+> For detailed implementation notes, see the [Product Availability Block README](blocks/product-availability/README.md).
 
 Here is an example of both blocks on a Product Details Page:
 
 ![Store Locator and Product Availability on PDP](docs/img/store-locator.png)
-
-With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
 
 ## Local Development
 
