@@ -289,12 +289,6 @@ This renders as the following HTML on the storefront:
 
 The block's `decorate()` function then populates it with the interactive map, store list, ZIP code filter, and store selection UI.
 
-Here is the below example of store-locator block being added to the Products Details Page.
-
-![Store Locator Block](docs/img/store-locator.png)
-
-With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
-
 ### Product Availability Block
 
 To add the product availability block to a page, create a single-cell table in your EDS document with the header `product-availability`:
@@ -311,7 +305,11 @@ The block displays product stock availability for the currently selected store. 
 
 > **Note:** The block uses the storefront's existing `commerce-endpoint` and Catalog Service headers from `configs.json` — no additional configuration is required. It works with both Adobe Commerce SaaS and PaaS deployments. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
 
-![Product Availability on PDP](docs/img/product-availability.png)
+Here is an example of both blocks on a Product Details Page:
+
+![Store Locator and Product Availability on PDP](docs/img/store-locator.png)
+
+With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
 
 ## Local Development
 
