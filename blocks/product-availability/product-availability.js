@@ -1,4 +1,5 @@
 import { events } from "@dropins/tools/event-bus.js";
+import { getConfigValue } from "../../scripts/configs.js";
 
 export default async function decorate(block) {
   let warehousesAvailability;
@@ -38,12 +39,15 @@ export default async function decorate(block) {
       return { items: [] };
     }
 
+    const configUrl = await getConfigValue("inventory-proxy-url");
     const actionUrl =
+      configUrl ||
       window.__EXC_CONFIG__?.actions?.["inventory-proxy"] ||
       window._myStoreConfig?.inventoryProxyUrl;
     if (!actionUrl) {
       console.error(
-        "[product-availability] Inventory proxy URL not configured"
+        "[product-availability] Inventory proxy URL not configured. " +
+          'Add "inventory-proxy-url" to your storefront configs sheet.'
       );
       return { items: [] };
     }
