@@ -20,9 +20,9 @@ This JavaScript module decorates a block with product availability details based
 
 ### 2. **Fetch Warehouse Availability**
 
-- Calls an API to retrieve product availability data.
+- Queries the Catalog Service GraphQL API (`commerce-endpoint` from `configs.json`) for product stock status.
 - Uses the `sku` from the last recorded `pdp/data` event.
-- This block leverage your storefront configuration and expect to use the scripts/commerce.js to get the commerce restApiBaseUrl and restApiToken. You need to ensure those configuration values are set in your configs.json file.
+- Displays `In Stock`, `Low Stock`, or `Out of Stock` based on the `inStock` and `lowStock` fields from the Catalog Service `ProductView` type. Works with both Adobe Commerce SaaS and PaaS deployments.
 
 ### 3. **Update Block with Data**
 

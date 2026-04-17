@@ -1,8 +1,8 @@
 import { loadCSS, loadScript } from "../../scripts/aem.js";
 
 export default async function decorate(block) {
-  loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
-  loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js");
+  loadCSS("/scripts/leaflet/leaflet.css");
+  loadScript("/scripts/leaflet/leaflet.js");
   const myStoreSession = JSON.parse(window.sessionStorage.getItem("myStore"));
   const getRatingPercentage = (n) => {
     if (typeof n !== "number" || isNaN(n)) {
@@ -193,6 +193,11 @@ export default async function decorate(block) {
   const stores = await response.json();
   const parentBlock = document.querySelector(".store-locator-container");
 
+  const defaultStoreCardDisplayOrder = [
+    { row: 1, itemOrder: ["name"] },
+    { row: 2, itemOrder: ["address", "phone"] },
+  ];
+
   const storeCardDisplayOrder = [];
   if (parentBlock) {
     Object.entries(parentBlock.dataset).forEach(([key, value]) => {
@@ -203,6 +208,10 @@ export default async function decorate(block) {
         storeCardDisplayOrder.push(conf);
       }
     });
+  }
+
+  if (storeCardDisplayOrder.length === 0) {
+    storeCardDisplayOrder.push(...defaultStoreCardDisplayOrder);
   }
 
   // Create and append the map container

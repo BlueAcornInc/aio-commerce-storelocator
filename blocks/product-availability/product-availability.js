@@ -1,9 +1,7 @@
 import { events } from "@dropins/tools/event-bus.js";
+import { getConfigValue, getHeaders } from "../../scripts/configs.js";
 
 export default async function decorate(block) {
-  let warehousesAvailability;
-  let myWarehouseId;
-  let myWarehouse;
   let myStore = JSON.parse(window.sessionStorage.getItem("myStore"));
 
   const baseClassName = "availability";
@@ -26,92 +24,91 @@ export default async function decorate(block) {
   };
   addEmptyBlock();
 
-  const updateBlock = (store, warehouse) => {
-    productAvailabilityEl.innerText = `Stock: ${warehouse.quantity}`;
+  const updateBlock = (store, stockData) => {
+    if (stockData.inStock) {
+      productAvailabilityEl.innerText = stockData.lowStock
+        ? "Low Stock"
+        : "In Stock";
+    } else {
+      productAvailabilityEl.innerText = "Out of Stock";
+    }
     storeEl.innerText = `Shopping from store #${store.number}.`;
     storeAddressEl.innerText = `${store.address}\n ${store.city}, ${store.state} ${store.zip}`;
   };
 
-  const getWarehousesAvailability = async () => {
+  const getProductAvailability = async () => {
     const product = events._lastEvent?.["pdp/data"]?.payload ?? null;
     if (!product?.sku) {
-      return { items: [] };
+      return null;
     }
 
-    const actionUrl =
-      window.__EXC_CONFIG__?.actions?.["inventory-proxy"] ||
-      window._myStoreConfig?.inventoryProxyUrl;
-    if (!actionUrl) {
+    const endpoint = await getConfigValue("commerce-endpoint");
+    if (!endpoint) {
       console.error(
-        "[product-availability] Inventory proxy URL not configured"
+        "[product-availability] Commerce endpoint not configured in configs.json"
       );
-      return { items: [] };
+      return null;
     }
 
-    const imsToken =
-      window.__EXC_CONFIG__?.ims?.token || window._myStoreConfig?.imsToken;
-
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(imsToken && { Authorization: `Bearer ${imsToken}` }),
-      },
-      body: JSON.stringify({
-        sku: product.sku,
-        sourceCode: myStore?.commerce_warehouse_id,
-      }),
+    const headers = {
+      "Content-Type": "application/json",
+      ...(await getHeaders("cs")),
     };
 
-    const data = fetch(actionUrl, options)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((responseData) => {
-        return responseData;
-      })
-      .catch((error) => {
-        console.error(
-          "[product-availability] Error fetching inventory:",
-          error
-        );
-        return { items: [] };
-      });
-    return data;
-  };
-  if (myStore) {
-    myWarehouseId = myStore.commerce_warehouse_id;
-  } else {
-    productAvailabilityEl.innerText =
-      "In-store stock: unknown. No store selected.";
-    productAvailabilityEl.classList.remove("hidden");
-  }
+    const query = `{
+      products(skus: ["${product.sku}"]) {
+        sku
+        name
+        inStock
+        lowStock
+      }
+    }`;
 
-  const setWarehouse = (warehouses) => {
-    if (warehouses?.items) {
-      Object.values(warehouses?.items).forEach((warehouse) => {
-        const { source_code } = warehouse;
-        if (source_code === myWarehouseId) {
-          myWarehouse = warehouse;
-        }
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ query }),
       });
-      updateBlock(myStore, myWarehouse);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const productData = result?.data?.products?.[0];
+      return productData || null;
+    } catch (error) {
+      console.error(
+        "[product-availability] Error fetching availability:",
+        error
+      );
+      return null;
     }
   };
-  warehousesAvailability = await getWarehousesAvailability();
-  if (myWarehouseId) {
-    setWarehouse(warehousesAvailability);
-  }
 
-  document.addEventListener("updateAvailability", () => {
+  const showAvailability = async () => {
+    const stockData = await getProductAvailability();
+
+    if (myStore && stockData) {
+      updateBlock(myStore, stockData);
+      productAvailabilityEl.classList.remove("hidden");
+      storeEl.classList.remove("hidden");
+      storeAddressEl.classList.remove("hidden");
+    } else if (myStore) {
+      productAvailabilityEl.innerText = "Unavailable";
+      productAvailabilityEl.classList.remove("hidden");
+    } else {
+      productAvailabilityEl.innerText = "No store selected.";
+      productAvailabilityEl.classList.remove("hidden");
+    }
+  };
+
+  await showAvailability();
+
+  document.addEventListener("updateAvailability", async () => {
     myStore = JSON.parse(window.sessionStorage.getItem("myStore"));
-    myWarehouseId = myStore.commerce_warehouse_id;
-    setWarehouse(warehousesAvailability);
-    storeEl.classList.remove("hidden");
-    storeAddressEl.classList.remove("hidden");
-    productAvailabilityEl.classList.remove("hidden");
+    if (!myStore) return;
+    await showAvailability();
   });
 }

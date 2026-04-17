@@ -139,12 +139,13 @@ aio app use
 
 npm install
 
+aio app build
 aio app deploy # this will build the app and register it for use in Adobe Commerce
 ```
 
 Once this is complete, add the app to your Commerce instance by going to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** > **Refresh Registrations**, then in Configure Registrations selecting the app to use.
 
-### Configure API Mesh
+### Configure API Mesh (Optional)
 
 This app includes a `mesh.json` configuration file that sets up an API Mesh to proxy Adobe Commerce GraphQL requests. The mesh routes requests through a single `AdobeCommerceAPI` source pointed at your Commerce instance's `/graphql` endpoint.
 
@@ -156,11 +157,13 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
 2. **Create the mesh** (from the project root):
 
+   The `COMMERCE_ENDPOINT` environment variable must be set to your Commerce instance URL in the `.env` file.
+
    ```bash
    aio api-mesh create mesh.json
    ```
 
-   This registers the mesh with your App Builder workspace. The `COMMERCE_ENDPOINT` environment variable must be set to your Commerce instance URL (this is populated automatically by `aio app use`).
+   This registers the mesh with your App Builder workspace.
 
 3. **Verify the mesh is running:**
 
@@ -170,7 +173,7 @@ This app includes a `mesh.json` configuration file that sets up an API Mesh to p
 
    You should see the mesh configuration with the `AdobeCommerceAPI` source.
 
-4. **Update the mesh** after configuration changes:
+4. Always **Update the mesh** after configuration changes:
 
    ```bash
    aio api-mesh update mesh.json
@@ -266,6 +269,8 @@ To add the store locator block, create a table within the document you want to e
 
 In your EDS document (Google Doc, SharePoint, or da.live), add a single-cell table like this:
 
+![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
+
 | store-locator |
 | ------------- |
 |               |
@@ -284,9 +289,29 @@ This renders as the following HTML on the storefront:
 
 The block's `decorate()` function then populates it with the interactive map, store list, ZIP code filter, and store selection UI.
 
-![Store Locator in da.live](docs/img/install-storelocator-dalive.png)
+Here is the below example of store-locator block being added to the Products Details Page.
+
+![Store Locator Block](docs/img/store-locator.png)
 
 With the AEM Sidekick installed, you can manage the entire store locator experience from your authoring environment (Google Drive, SharePoint, or da.live). Edit your `store-locator/stores` sheet and use AEM Sidekick to Preview and Publish the changes. This produces a `stores.json` file that drives the store locator experience via the shared block.
+
+### Product Availability Block
+
+To add the product availability block to a page, create a single-cell table in your EDS document with the header `product-availability`:
+
+| product-availability |
+| -------------------- |
+|                      |
+
+The block displays product stock availability for the currently selected store. It works in concert with the Store Locator block:
+
+1. When a user selects a store in the Store Locator, the selection is saved to `sessionStorage`.
+2. The Product Availability block queries the Catalog Service GraphQL API (the same `commerce-endpoint` used by the rest of the storefront) for product stock status.
+3. If a store is selected, the block displays whether the product is in stock at that location. If no store is selected, it prompts the user to choose one.
+
+> **Note:** The block uses the storefront's existing `commerce-endpoint` and Catalog Service headers from `configs.json` — no additional configuration is required. It works with both Adobe Commerce SaaS and PaaS deployments. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
+
+![Product Availability on PDP](docs/img/product-availability.png)
 
 ## Local Development
 
