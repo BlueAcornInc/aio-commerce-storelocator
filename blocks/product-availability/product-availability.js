@@ -98,7 +98,16 @@ export default async function decorate(block) {
           myWarehouse = warehouse;
         }
       });
+    }
+    if (myStore && myWarehouse) {
       updateBlock(myStore, myWarehouse);
+      productAvailabilityEl.classList.remove("hidden");
+      storeEl.classList.remove("hidden");
+      storeAddressEl.classList.remove("hidden");
+    } else if (myStore) {
+      productAvailabilityEl.innerText =
+        "In-store stock: unavailable for this store.";
+      productAvailabilityEl.classList.remove("hidden");
     }
   };
   warehousesAvailability = await getWarehousesAvailability();
@@ -108,10 +117,8 @@ export default async function decorate(block) {
 
   document.addEventListener("updateAvailability", () => {
     myStore = JSON.parse(window.sessionStorage.getItem("myStore"));
+    if (!myStore) return;
     myWarehouseId = myStore.commerce_warehouse_id;
     setWarehouse(warehousesAvailability);
-    storeEl.classList.remove("hidden");
-    storeAddressEl.classList.remove("hidden");
-    productAvailabilityEl.classList.remove("hidden");
   });
 }
