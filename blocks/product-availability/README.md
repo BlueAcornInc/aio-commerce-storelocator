@@ -22,7 +22,8 @@ This JavaScript module decorates a block with product availability details based
 
 - Calls an API to retrieve product availability data.
 - Uses the `sku` from the last recorded `pdp/data` event.
-- This block leverage your storefront configuration and expect to use the scripts/commerce.js to get the commerce restApiBaseUrl and restApiToken. You need to ensure those configuration values are set in your configs.json file.
+- The block resolves the inventory proxy URL from `window.__EXC_CONFIG__.actions["inventory-proxy"]` (set automatically when running inside App Builder) or from `window._myStoreConfig.inventoryProxyUrl` as a fallback.
+- Authentication is handled via the IMS token from `window.__EXC_CONFIG__.ims.token` or `window._myStoreConfig.imsToken`. No tokens should be hardcoded in the block or in storefront configuration files.
 
 ### 3. **Update Block with Data**
 

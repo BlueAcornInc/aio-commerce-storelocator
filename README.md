@@ -309,7 +309,7 @@ The block displays product stock availability for the currently selected store. 
 2. The Product Availability block listens for the `updateAvailability` event and fetches warehouse stock data for the current product SKU.
 3. If a store is selected, the block displays whether the product is in stock at that location. If no store is selected, it prompts the user to choose one.
 
-> **Note:** This block expects your storefront's `configs.json` to include the `restApiBaseUrl` and `restApiToken` values used by `scripts/commerce.js`. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
+> **Note:** The block automatically resolves the inventory proxy URL and IMS token from the App Builder runtime context (`window.__EXC_CONFIG__`). No tokens should be hardcoded in the block or storefront configuration. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
 
 ![Product Availability on PDP](docs/img/product-availability.png)
 
