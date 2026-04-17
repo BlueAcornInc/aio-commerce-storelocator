@@ -149,17 +149,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js for npmjs.com
-        if: env.SKIP_NPMJS_PUBLISH == 'false'
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          registry-url: "https://registry.npmjs.org"
-
       - name: Publish to npmjs.com
         if: env.SKIP_NPMJS_PUBLISH == 'false'
         working-directory: ./blocks
         run: |
+          # Clean any npmrc from previous steps — OIDC trusted publisher handles auth
+          rm -f .npmrc
+          rm -f ~/.npmrc
+
           # Temporarily change package name for npmjs.com (different scope)
           ORIGINAL_NAME=$(npm pkg get name | tr -d '"')
           echo "Original package name: $ORIGINAL_NAME"
@@ -168,10 +165,10 @@ jobs:
 
           if [ "${{ github.ref }}" == "refs/heads/block-package" ]; then
             echo "Publishing prerelease version to npmjs.com with beta tag..."
-            npm publish --access public --tag beta --provenance
+            npm publish --access public --tag beta --provenance --registry https://registry.npmjs.org
           else
             echo "Publishing stable version to npmjs.com with latest tag..."
-            npm publish --access public --provenance
+            npm publish --access public --provenance --registry https://registry.npmjs.org
           fi
 
           # Restore original package name
