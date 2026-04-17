@@ -311,6 +311,8 @@ The block displays product stock availability for the currently selected store. 
 
 > **Note:** This block expects your storefront's `configs.json` to include the `restApiBaseUrl` and `restApiToken` values used by `scripts/commerce.js`. See the [Product Availability Block README](blocks/product-availability/README.md) for implementation details.
 
+![Product Availability on PDP](docs/img/product-availability.png)
+
 ## Local Development
 
 ### Setup
