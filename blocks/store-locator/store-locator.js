@@ -1,13 +1,45 @@
 import { loadCSS, loadScript } from "../../scripts/aem.js";
 
+/**
+ * Load Leaflet and resolve when window.L is ready. Previously this was done
+ * by firing loadScript(), then polling for window.L on 50×100ms cycle — a
+ * hard 5s ceiling that was intermittently tripping on slow/corp-proxied
+ * networks. The new version awaits the loadScript promise (when aem.js
+ * provides one), falls back to a 10s poll as a safety net, and fails with
+ * a clear message only after the wider window.
+ */
+async function loadLeaflet(cssUrl, jsUrl) {
+  loadCSS(cssUrl);
+  try {
+    // aem.js versions differ: some return a Promise that resolves on the
+    // <script> onload event; others return void. `Promise.resolve()` on a
+    // void is a no-op, so this works either way.
+    await Promise.resolve(loadScript(jsUrl));
+  } catch {
+    /* fall through to polling — loadScript rejected but script may still
+       attach a global */
+  }
+
+  // Some browsers fire onload before globals are assigned; poll briefly.
+  const maxAttempts = 100;
+  const interval = 100;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    if (window.L) return window.L;
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((r) => setTimeout(r, interval));
+  }
+  throw new Error("[store-locator] Leaflet did not load in time (10s)");
+}
+
 export default async function decorate(block) {
-  // Leaflet 1.9.4 — loaded from unpkg CDN by default.
-  // To self-host (e.g. behind a corporate proxy), download the Leaflet
-  // release and serve from /scripts/leaflet/ in your storefront repo:
-  // loadCSS("/scripts/leaflet/leaflet.css");
-  // loadScript("/scripts/leaflet/leaflet.js");
-  loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
-  loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js");
+  // Leaflet is vendored alongside this block (leaflet.js + leaflet.css in
+  // the same directory). We use import.meta.url so the paths resolve
+  // relative to the module's own URL (/blocks/store-locator/...) rather
+  // than the current document, which keeps the block portable — works in
+  // any consuming storefront's /blocks/ tree, no CDN dependency, no need
+  // for consumers to vendor anything separately.
+  const leafletJs = new URL("./leaflet.js", import.meta.url).href;
+  const leafletCss = new URL("./leaflet.css", import.meta.url).href;
   const myStoreSession = JSON.parse(window.sessionStorage.getItem("myStore"));
   const getRatingPercentage = (n) => {
     if (typeof n !== "number" || isNaN(n)) {
@@ -226,24 +258,7 @@ export default async function decorate(block) {
   mapContainer.style.height = "500px";
   block.appendChild(mapContainer);
 
-  /** Wait for Leaflet to load before initializing the map. */
-  function waitForLeaflet(maxAttempts = 50, interval = 100) {
-    return new Promise((resolve, reject) => {
-      let attempts = 0;
-      const check = () => {
-        if (window.L) {
-          resolve(window.L);
-        } else if (++attempts >= maxAttempts) {
-          reject(new Error("[store-locator] Leaflet did not load in time"));
-        } else {
-          setTimeout(check, interval);
-        }
-      };
-      check();
-    });
-  }
-
-  const L = await waitForLeaflet();
+  const L = await loadLeaflet(leafletCss, leafletJs);
   const map = L.map("map");
 
   map.setView([stores.data[0].lat, stores.data[0].lng], 10);

@@ -1,5 +1,119 @@
 import { events } from "@dropins/tools/event-bus.js";
-import { getConfigValue, getHeaders } from "../../scripts/configs.js";
+
+/**
+ * Commerce context — endpoint + headers for the catalog-service GraphQL call.
+ *
+ * Self-contained: no dep on a consuming storefront's scripts/configs.js.
+ * Three sources, first match wins:
+ *
+ *   1. Injected via setCommerceContext({ endpoint, headers }) at storefront
+ *      boot. Most flexible for consumers with centralized config.
+ *   2. Block-config markdown rows (EDS-idiomatic). Editor sets endpoint +
+ *      store code + store view code etc. on the block:
+ *        | product-availability |                                        |
+ *        |----------------------|----------------------------------------|
+ *        | endpoint             | https://edge-graph.adobe.io/api/...   |
+ *        | store-code           | main_website_store                    |
+ *        | store-view-code      | default                               |
+ *        | website-code         | base                                  |
+ *        | customer-group       | b6589fc6ab0dc82cf12099d1c2d40ab994... |
+ *        | api-key              | <optional>                            |
+ *   3. /configs.json or /placeholders.json — the block auto-reads commerce
+ *      keys from whichever is available (Adobe Boilerplate Commerce ships
+ *      configs.json; pure EDS storefronts usually use placeholders.json).
+ *
+ * All three resolve to the same shape: { endpoint, headers }.
+ */
+
+let injectedContext = null;
+
+// Public: consumer storefronts can call this at boot.
+export function setCommerceContext(ctx) {
+  injectedContext = ctx;
+}
+
+/** Read block-config pairs from the decorated block's markdown rows. */
+function readContextFromBlock(block) {
+  const pairs = {};
+  block.querySelectorAll(":scope > div").forEach((row) => {
+    const cells = row.querySelectorAll(":scope > div");
+    if (cells.length !== 2) return;
+    const key = cells[0].textContent.trim().toLowerCase();
+    const value = cells[1].textContent.trim();
+    if (key && value) pairs[key] = value;
+  });
+
+  const endpoint = pairs["endpoint"] || pairs["commerce-endpoint"];
+  if (!endpoint) return null;
+
+  const headers = { "Content-Type": "application/json" };
+  const headerMap = {
+    "store-code": "Magento-Store-Code",
+    "store-view-code": "Magento-Store-View-Code",
+    "website-code": "Magento-Website-Code",
+    "customer-group": "Magento-Customer-Group",
+    "api-key": "x-api-key",
+    "environment-id": "Magento-Environment-Id",
+  };
+  Object.entries(headerMap).forEach(([cfgKey, headerKey]) => {
+    if (pairs[cfgKey]) headers[headerKey] = pairs[cfgKey];
+  });
+
+  return { endpoint, headers };
+}
+
+/**
+ * Last-resort: pull commerce keys out of a storefront's sheet. Tries
+ * /configs.json first (Adobe Boilerplate Commerce convention) then falls
+ * back to /placeholders.json (EDS default) — different storefronts ship
+ * commerce config in different places.
+ */
+async function readContextFromSheet() {
+  for (const path of ["/configs.json", "/placeholders.json"]) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const res = await fetch(path);
+      if (!res.ok) continue;
+      // eslint-disable-next-line no-await-in-loop
+      const doc = await res.json();
+      const rows =
+        doc.data || doc.default?.data || (Array.isArray(doc) ? doc : []);
+      const lookup = {};
+      rows.forEach((row) => {
+        if (row.key) lookup[row.key.toLowerCase()] = row.value;
+      });
+
+      const endpoint =
+        lookup["commerce-endpoint"] || lookup["commerce-core-endpoint"];
+      if (!endpoint) continue;
+
+      const headers = { "Content-Type": "application/json" };
+      const prefix = "commerce.headers.cs.";
+      Object.entries(lookup).forEach(([k, v]) => {
+        if (v && k.startsWith(prefix)) {
+          headers[k.slice(prefix.length)] = v;
+        }
+      });
+
+      return { endpoint, headers };
+    } catch {
+      /* try next path */
+    }
+  }
+  return null;
+}
+
+async function resolveCommerceContext(block) {
+  if (injectedContext?.endpoint) return injectedContext;
+
+  const fromBlock = readContextFromBlock(block);
+  if (fromBlock) return fromBlock;
+
+  const fromSheet = await readContextFromSheet();
+  if (fromSheet) return fromSheet;
+
+  return null;
+}
 
 export default async function decorate(block) {
   let myStore = JSON.parse(window.sessionStorage.getItem("myStore"));
@@ -14,6 +128,12 @@ export default async function decorate(block) {
   const storeAddressEl = document.createElement("div");
   storeAddressEl.className = `${baseClassName}__store-address`;
 
+  // Resolve commerce context BEFORE emptying the block — the block-config
+  // markdown lives in the DOM we're about to clear.
+  const commerceContext = await resolveCommerceContext(block);
+
+  // Clear the block and populate our structure.
+  block.textContent = "";
   const addEmptyBlock = () => {
     productAvailabilityEl.classList.add("hidden");
     storeEl.classList.add("hidden");
@@ -42,18 +162,12 @@ export default async function decorate(block) {
       return null;
     }
 
-    const endpoint = await getConfigValue("commerce-endpoint");
-    if (!endpoint) {
-      console.error(
-        "[product-availability] Commerce endpoint not configured in configs.json"
+    if (!commerceContext) {
+      console.warn(
+        "[product-availability] No commerce context found. Provide it via setCommerceContext(), block-config markdown, or placeholders.json. See the block README."
       );
       return null;
     }
-
-    const headers = {
-      "Content-Type": "application/json",
-      ...(await getHeaders("cs")),
-    };
 
     const query = `{
       products(skus: ["${product.sku}"]) {
@@ -65,9 +179,9 @@ export default async function decorate(block) {
     }`;
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(commerceContext.endpoint, {
         method: "POST",
-        headers,
+        headers: commerceContext.headers,
         body: JSON.stringify({ query }),
       });
 
@@ -76,8 +190,7 @@ export default async function decorate(block) {
       }
 
       const result = await response.json();
-      const productData = result?.data?.products?.[0];
-      return productData || null;
+      return result?.data?.products?.[0] || null;
     } catch (error) {
       console.error(
         "[product-availability] Error fetching availability:",
