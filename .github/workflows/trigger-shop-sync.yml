@@ -1,0 +1,54 @@
+name: Trigger Shop Integration Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      trigger_storelocator:
+        description: "Trigger shop store-locator profile update"
+        required: true
+        default: true
+        type: boolean
+      trigger_all:
+        description: "Trigger shop all profile update"
+        required: true
+        default: true
+        type: boolean
+  release:
+    types: [published]
+
+jobs:
+  dispatch-storelocator:
+    if: github.event_name == 'release' || inputs.trigger_storelocator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch storelocator-release to shop
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
+          repository: BlueAcornInc/shop
+          event-type: storelocator-release
+          client-payload: |
+            {
+              "source_repository": ${{ toJSON(github.repository) }},
+              "source_event": ${{ toJSON(github.event_name) }},
+              "source_ref": ${{ toJSON(github.ref_name) }},
+              "source_sha": ${{ toJSON(github.sha) }}
+            }
+
+  dispatch-all:
+    if: github.event_name == 'release' || inputs.trigger_all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch all-release to shop
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
+          repository: BlueAcornInc/shop
+          event-type: all-release
+          client-payload: |
+            {
+              "source_repository": ${{ toJSON(github.repository) }},
+              "source_event": ${{ toJSON(github.event_name) }},
+              "source_ref": ${{ toJSON(github.ref_name) }},
+              "source_sha": ${{ toJSON(github.sha) }}
+            }
