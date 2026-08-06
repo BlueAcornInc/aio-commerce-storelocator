@@ -22,7 +22,12 @@ const links = [
     url: "https://github.com/BlueAcornInc/aio-commerce-storelocator/issues",
   },
   { label: "Contact Us", url: "mailto:apps@blueacornici.com" },
-  { label: "Documentation", url: "https://apps.blueacornici.shop/" },
+  // Deep link to this app's docs, not the site index -- the index lists every
+  // app and does not answer "how do I configure the thing I am looking at".
+  {
+    label: "Documentation",
+    url: "https://apps.blueacornici.shop/apps/storelocator/docs/storelocator.html",
+  },
 ];
 
 export const Support = (props) => {

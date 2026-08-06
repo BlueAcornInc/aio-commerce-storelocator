@@ -71,7 +71,8 @@
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
     "prepare": "husky",
-    "fix-all": "npm run format:fix && npm run lint:fix"
+    "fix-all": "npm run format:fix && npm run lint:fix",
+    "docs:capture": "node ${AIO_BIN:-../bin}/aio-capture-docs docs-capture.config.mjs"
   },
   "engines": {
     "node": "^16.13 || >=18"
