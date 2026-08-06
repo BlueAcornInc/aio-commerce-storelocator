@@ -1,0 +1,4 @@
+# Vendored third-party libraries — keep upstream formatting so the files
+# stay diffable against the original distribution.
+blocks/store-locator/leaflet.js
+blocks/store-locator/leaflet.css
