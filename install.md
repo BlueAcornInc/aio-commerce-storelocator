@@ -129,6 +129,18 @@ aio app deploy # this will build the app and register it for use in Adobe Commer
 
 Once this is complete, add the app to your Commerce instance by going to **Stores** > **Configuration** > **Adobe Services** > **Admin UI SDK** > **Refresh Registrations**, then in Configure Registrations selecting the app to use.
 
+### Confirming the app is available
+
+Opening the app from the Commerce Admin shows the Welcome tab, which summarises the Sources and Inventory setup covered below:
+
+![Store Locator Welcome tab](docs/img/ui/app-welcome.png)
+
+The Support tab collects the links you will need if something goes wrong — issue tracker, contact address, and this documentation:
+
+![Store Locator Support tab](docs/img/ui/app-support.png)
+
+> These two screenshots are generated from the built UI by `npm run docs:capture`, so they track the app rather than drifting from it.
+
 ## Configure API Mesh (Optional)
 
 This app includes a `mesh.json` configuration file that sets up an API Mesh to proxy Adobe Commerce GraphQL requests. The mesh routes requests through a single `AdobeCommerceAPI` source pointed at your Commerce instance's `/graphql` endpoint.
